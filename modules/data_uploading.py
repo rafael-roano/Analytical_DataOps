@@ -1,6 +1,9 @@
+from pyspark.sql import SparkSession
 import logging
-import boto3
-import os
+import sys
+
+sys.path.append("C:\\Users\\FBLServer\\Documents\\c\\")
+import config
 
 # import time
 
@@ -48,27 +51,49 @@ console_handler.addFilter(HandlerFilter(logging.INFO))
 formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s')
 file_handler.setFormatter(formatter)
 
-# Upload Parquet files to s3 bucket
-s3 = boto3.resource("s3")
 
-# Delete existing star_schema directory
-bucket = s3.Bucket("aaa-raw-data")
-bucket.objects.filter(Prefix="star_schema/").delete()
+# Start SparkSession (entry point to Spark)
 
-# Upload Parquet Files
-def uploadParquet(path, parquet):
-    
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            s3.meta.client.upload_file(os.path.join(root, file), "aaa-raw-data", "star_schema/" + parquet + "/" + file)
-    
-    logger.info(f"Parquet file '{parquet}' was successfully loaded to S3")
+uploading_session = SparkSession.builder.master("local[*]").appName('Data_Uploading').getOrCreate()
+sc = uploading_session.sparkContext
 
+# Configure Hadoop
 
-uploadParquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Fact_Sales", "Fact_Sales")
-uploadParquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Sales_Channels", "Dim_Sales_Channels")
-uploadParquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Products", "Dim_Products")
-uploadParquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Dates", "Dim_Dates")
+hadoop_conf = sc._jsc.hadoopConfiguration()
+access_key = config.a_k
+secret_key = config.s_k
+endpoint = "https://s3.us-west-1.amazonaws.com"
+
+hadoop_conf.set("fs.s3a.access.key", access_key)
+hadoop_conf.set("fs.s3a.secret.key", secret_key)
+hadoop_conf.set("fs.s3a.endpoint", endpoint)
+
+# sc.setSystemProperty("com.amazonaws.services.s3.enableV4", "true")
+# sc._jsc.hadoopConfiguration().set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
+# sc._jsc.hadoopConfiguration().set("fs.s3a.path.style.access", "true")
+# sc._jsc.hadoopConfiguration().set("com.amazonaws.services.s3.enableV4", "true")
+
+# Read Parquet files into DataFrames and write them as Parquet files into S3 bucket
+Fact_Sales = uploading_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Fact_Sales")
+Fact_Sales.write.parquet("s3a://aaa-raw-data/Star_Schema_Tables/Fact_Sales")
+rows = Fact_Sales.count()
+logger.info(f"Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. {rows} rows loaded")
+
+Dim_Products = uploading_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Products")
+Dim_Products.write.parquet("s3a://aaa-raw-data/Star_Schema_Tables/Dim_Products")
+rows = Dim_Products.count()
+logger.info(f"Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. {rows} rows loaded")
+
+Dim_Sales_Channels = uploading_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Sales_Channels")
+Dim_Sales_Channels.write.parquet("s3a://aaa-raw-data/Star_Schema_Tables/Dim_Sales_Channels")
+rows = Dim_Sales_Channels.count()
+logger.info(f"Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. {rows} rows loaded")
+
+Dim_Dates = uploading_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Dates")
+Dim_Dates.write.parquet("s3a://aaa-raw-data/Star_Schema_Tables/Dim_Dates")
+rows = Dim_Dates.count()
+logger.info(f"Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. {rows} rows loaded")
+
 
 # Record script running time
 # script_time = round(time.time() - star_time, 2)

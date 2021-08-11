@@ -60,7 +60,7 @@ file_handler.setFormatter(formatter)
 
 
 def table_to_dataframe (table):
-    '''Read table from SQL database and returns a DataFrame.
+    '''Read table from MySQL database and returns a DataFrame.
             
     Args:
         table (str): Table's name.
@@ -161,8 +161,10 @@ def masking_check (df, df_name, fields):
 
 
 
-# Start SparkSession (entry point to Spark SQL)
+# Start SparkSession (entry point to Spark)
 sql_session = SparkSession.builder.master("local[*]").appName('FBL_Extraction').getOrCreate()
+
+# MySQL database configuration values
 url = config.db_url
 driver = "com.mysql.cj.jdbc.Driver"
 u = config.db_u
@@ -170,7 +172,7 @@ p = config.db_p
 tables = ["so", "soitem", "product", "part", "qbclass"]
 
 
-# Read SQL tables into DataFrames
+# Read MySQL tables into DataFrames
 so = table_to_dataframe("so")
 loaded_df_check (so, "so")
 soitem = table_to_dataframe("soitem")
@@ -219,15 +221,20 @@ masking_check(masked_part, "reduced_part", 7)
 
 # Save DataFrames (locally) into parquet files
 reduced_so.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_so")
+reduced_so.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_so.csv")
 logger.info(f"DataFrame 'reduced_so' was successfully saved as parquet file")
 reduced_soitem.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_soitem")
+reduced_soitem.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_soitem.csv")
 logger.info(f"DataFrame 'reduced_soitem' was successfully saved as parquet file")
 reduced_product.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_product")
+reduced_product.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_product.csv")
 logger.info(f"DataFrame 'reduced_product' was successfully saved as parquet file")
 masked_part.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\m_part")
+masked_part.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\m_part.csv")
 logger.info(f"DataFrame 'masked_part' was successfully saved as parquet file")
-masked_part.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_qbclass")
-logger.info(f"DataFrame 'masked_part' was successfully saved as parquet file")
+reduced_qbclass.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_qbclass")
+reduced_qbclass.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_qbclass.csv")
+logger.info(f"DataFrame 'reduced_qbclass' was successfully saved as parquet file")
 
 # Record script running time
 # script_time = round(time.time() - star_time, 2)

@@ -2,8 +2,8 @@ from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import StructType, StructField, StringType, BooleanType, TimestampType, IntegerType
 import logging
-# import time
 
+# import time
 
 # Start timer to record script running time
 # star_time = time.time()
@@ -50,22 +50,22 @@ formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s')
 file_handler.setFormatter(formatter)
 
 
-# Start SparkSession (entry point to Spark SQL)
+# Start SparkSession (entry point to Spark)
 cleaning_session = SparkSession.builder.master("local[*]").appName('Data_Cleaning').getOrCreate()
 
 # Read Parquet files into DataFrames
 so = cleaning_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\Extracted_MySQL_Tables\\r_so")
 rows = so.count()
-logger.info(f"Parquet file 'so' was successfully loaded into DataFrame. {rows} rows loaded")
+logger.info(f"Parquet file 'r_so' was successfully loaded into DataFrame. {rows} rows loaded")
 soitem = cleaning_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_soitem")
 rows = soitem.count()
-logger.info(f"Parquet file 'soitem' was successfully loaded into DataFrame. {rows} rows loaded")
+logger.info(f"Parquet file 'r_soitem' was successfully loaded into DataFrame. {rows} rows loaded")
 product = cleaning_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_product")
 rows = product.count()
-logger.info(f"Parquet file 'product' was successfully loaded into DataFrame. {rows} rows loaded")
+logger.info(f"Parquet file 'r_product' was successfully loaded into DataFrame. {rows} rows loaded")
 part = cleaning_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\m_part")
 rows = part.count()
-logger.info(f"Parquet file 'part' was successfully loaded into DataFrame. {rows} rows loaded")
+logger.info(f"Parquet file 'm_part' was successfully loaded into DataFrame. {rows} rows loaded")
 
 # 'so' DataFrame transformations
 
@@ -74,14 +74,12 @@ so = so.filter((so.statusId != 80) & (so.statusId != 85) & (so.statusId != 90) &
 logger.info(f"Transformation on DataFrame 'so' completed: Transactions with status 80, 85, 90 or 95 were filtered out")
 rows = so.count()
 logger.info(f"Row count is {rows}")
-so.show()  
 
 # Replace null value in "currencyId" field with 1, which equals USD
 so = so.na.fill({'currencyId': 1})
 logger.info(f"Transformation on DataFrame 'so' completed: Currency field with value null was replaced with 1 (USD)")
 rows = so.count()
 logger.info(f"Row count is {rows}")
-so.show()
 
 # Categorize transactions by Sales Channel
 so = so.select(so['*'], 
@@ -109,7 +107,6 @@ so = so.select(so['*'],
 logger.info(f"Transformation on DataFrame 'so' completed: Sales transactions were categorized")
 rows = so.count()
 logger.info(f"Row count is {rows}")
-so.show()
 
 # Save transactions not required (Samples, RMA, Closed Channel, Uncategorized) in CSV file as backup
 
@@ -117,7 +114,6 @@ not_req = so.filter(so.sales_channel.isin(["Samples", "RMA", "Closed Channel", "
 logger.info(f"Transactions not required in Fact_Sales table were loaded into DataFrame 'not_req'")
 rows =not_req.count()
 logger.info(f"Row count is {rows}")
-not_req.show()
 not_req.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\not_required_trans")
 
 # Remove transactions not required from "so" DataFrame (Samples, RMA, Closed Channel, Uncategorized)
@@ -126,7 +122,6 @@ so = so.select("id", "currencyId", "customerId", "dateCompleted", "dateCreated",
 logger.info(f"Transformation on DataFrame 'so' completed: Sales transactions with categories: Samples, RMA, Closed Channel or Uncategorized were filtered out")
 rows = so.count()
 logger.info(f"Row count is {rows}")
-so.show()
 
 
 # 'soitem' DataFrame transformations
@@ -136,14 +131,12 @@ soitem = soitem.filter(soitem.typeId == 10)
 logger.info(f"Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered")
 rows = soitem.count()
 logger.info(f"Row count is {rows}")
-soitem.show()
 
 # Round qtyOrdered field to zero digits
 soitem = soitem.withColumn("qtyOrdered_r", F.round(soitem.qtyOrdered, 0)).drop(soitem.qtyOrdered)
 logger.info(f"Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits")
 rows = soitem.count()
 logger.info(f"Row count is {rows}")
-soitem.show()
 
 # 'part' DataFrame transformations
 
@@ -159,21 +152,21 @@ logger.info(f"Row count is {rows}")
 
 # Join DataFrame 'soitem' with DataFrame 'so'
 categorized_items = soitem.join(so, soitem.soId ==  so.id)
-categorized_items.select(soitem.productId, soitem.qtyOrdered_r, so.sales_channel).show()
+# categorized_items.select(soitem.productId, soitem.qtyOrdered_r, so.sales_channel).show()
 logger.info(f"Join completed. DataFrame 'soitem' joined with DataFrame 'so'")
 rows = categorized_items.count()
 logger.info(f"Row count is {rows}")
 
 # Join DataFrame 'categorized_items' with DataFrame 'product'
 categorized_items = categorized_items.join(product, categorized_items.productId == product.id)
-categorized_items.select(product.partId, categorized_items.qtyOrdered_r, categorized_items.sales_channel).show()
+# categorized_items.select(product.partId, categorized_items.qtyOrdered_r, categorized_items.sales_channel).show()
 logger.info(f"Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'")
 rows = categorized_items.count()
 logger.info(f"Row count is {rows}")
 
 # Join DataFrame 'categorized_items' with DataFrame 'part'
 categorized_items = categorized_items.join(part, categorized_items.partId == part.id)
-categorized_items.select(part.masked_num, categorized_items.qtyOrdered_r, categorized_items.sales_channel).show()
+# categorized_items.select(part.masked_num, categorized_items.qtyOrdered_r, categorized_items.sales_channel).show()
 logger.info(f"Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'")
 rows = categorized_items.count()
 logger.info(f"Row count is {rows}")
@@ -183,13 +176,11 @@ categorized_items.printSchema()
 # Create 'Fact_Sales' table
 Fact_Sales = categorized_items.select(categorized_items.dateCreated.alias("Date_Id"), categorized_items.sales_channel.alias("Sales_Channel_Id"), \
                         categorized_items.masked_num.alias("Product_Id"), categorized_items.qtyOrdered_r.alias("Units_Sold"))
-Fact_Sales.show()
 Fact_Sales.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Fact_Sales")
 logger.info(f"Table 'Fact_Sales' was successfully saved as Parquet file")
 
 # Create 'Dim_Products' table
 Dim_Products = part.select("id", "masked_num", "len_r", "width_r", "height_r")
-Dim_Products.show()
 Dim_Products.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Products")
 logger.info(f"Table Dim_Products was successfully saved as Parquet file")
 
@@ -204,7 +195,6 @@ sales_cat_schema = StructType([
 
 Dim_Sales_Channels = cleaning_session.read.option("header", True).schema(sales_cat_schema).csv("C:\\Users\\FBLServer\\Documents\\c\\sales_cat.csv")
 Dim_Sales_Channels.printSchema()
-Dim_Sales_Channels.show()
 Dim_Sales_Channels.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Sales_Channels")
 logger.info(f"Table 'Dim_Sales_Channels' was successfully saved as Parquet file")
 
@@ -218,7 +208,6 @@ date_schema = StructType([
 
 Dim_Dates = cleaning_session.read.option("header", True).schema(date_schema).csv("C:\\Users\\FBLServer\\Documents\\c\\date.csv")
 Dim_Dates.printSchema()
-Dim_Dates.show()
 Dim_Dates.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Dates")
 logger.info(f"Table 'Dim_Dates' was successfully saved as Parquet file")
 

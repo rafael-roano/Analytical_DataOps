@@ -1,54 +1,120 @@
-2021-07-28 22:41:35,851:INFO:data_extraction: Table 'so' was successfully loaded. 15124 rows loaded.
-2021-07-28 22:41:39,447:INFO:data_extraction: Table 'soitem' was successfully loaded. 98515 rows loaded.
-2021-07-28 22:41:40,691:INFO:data_extraction: Table 'product' was successfully loaded. 8576 rows loaded.
-2021-07-28 22:41:41,854:INFO:data_extraction: Table 'part' was successfully loaded. 8821 rows loaded.
-2021-07-28 22:41:42,780:INFO:data_extraction: Table 'qbclass' was successfully loaded. 18 rows loaded.
-2021-07-28 22:41:43,041:INFO:data_extraction: Table 'so' was successfully reduced to required fields.
-2021-07-28 22:41:43,073:INFO:data_extraction: Table 'soitem' was successfully reduced to required fields.
-2021-07-28 22:41:43,084:INFO:data_extraction: Table 'product' was successfully reduced to required fields.
-2021-07-28 22:41:43,119:INFO:data_extraction: Table 'part' was successfully reduced to required fields.
-2021-07-28 22:41:43,140:INFO:data_extraction: Table 'qbclass' was successfully reduced to required fields.
-2021-07-28 22:41:45,765:INFO:data_extraction: DataFrame 'reduced_part' was successfully masked.
-2021-07-28 22:41:49,025:INFO:data_extraction: DataFrame 'reduced_so' was successfully saved as parquet file
-2021-07-28 22:41:51,447:INFO:data_extraction: DataFrame 'reduced_soitem' was successfully saved as parquet file
-2021-07-28 22:41:52,072:INFO:data_extraction: DataFrame 'reduced_product' was successfully saved as parquet file
-2021-07-28 22:41:53,704:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
-2021-07-28 22:41:55,213:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
-2021-07-28 22:41:56,198:INFO:__main__: 'data_extraction' script was successfully executed. Runnig time was 37.09 secs
-2021-07-28 22:42:09,572:INFO:data_cleaning: Parquet file 'so' was successfully loaded into DataFrame. 2864 rows loaded
-2021-07-28 22:42:09,838:INFO:data_cleaning: Parquet file 'soitem' was successfully loaded into DataFrame. 98515 rows loaded
-2021-07-28 22:42:10,104:INFO:data_cleaning: Parquet file 'product' was successfully loaded into DataFrame. 8576 rows loaded
-2021-07-28 22:42:10,339:INFO:data_cleaning: Parquet file 'part' was successfully loaded into DataFrame. 8821 rows loaded
-2021-07-28 22:42:10,557:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status 80, 85, 90 or 95 were filtered out
-2021-07-28 22:42:11,150:INFO:data_cleaning: Row count is 2839
-2021-07-28 22:42:11,541:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Currency field with value null was replaced with 1 (USD)
-2021-07-28 22:42:11,711:INFO:data_cleaning: Row count is 2839
-2021-07-28 22:42:12,175:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized
-2021-07-28 22:42:12,307:INFO:data_cleaning: Row count is 2839
-2021-07-28 22:42:12,619:INFO:data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_req'
-2021-07-28 22:42:12,823:INFO:data_cleaning: Row count is 95
-2021-07-28 22:42:14,034:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: Samples, RMA, Closed Channel or Uncategorized were filtered out
-2021-07-28 22:42:14,215:INFO:data_cleaning: Row count is 2744
-2021-07-28 22:42:14,448:INFO:data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered
-2021-07-28 22:42:14,690:INFO:data_cleaning: Row count is 83208
-2021-07-28 22:42:14,832:INFO:data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits
-2021-07-28 22:42:14,975:INFO:data_cleaning: Row count is 83208
-2021-07-28 22:42:15,155:INFO:data_cleaning: Transformation on DataFrame 'part' completed: Columns: len, width and height were rounded to 2 digits
-2021-07-28 22:42:15,249:INFO:data_cleaning: Row count is 8821
-2021-07-28 22:42:15,761:INFO:data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'
-2021-07-28 22:42:16,089:INFO:data_cleaning: Row count is 13041
-2021-07-28 22:42:16,447:INFO:data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'
-2021-07-28 22:42:16,776:INFO:data_cleaning: Row count is 13041
-2021-07-28 22:42:17,194:INFO:data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'
-2021-07-28 22:42:17,479:INFO:data_cleaning: Row count is 13041
-2021-07-28 22:42:19,137:INFO:data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
-2021-07-28 22:42:20,099:INFO:data_cleaning: Table Dim_Products was successfully saved as Parquet file
-2021-07-28 22:42:20,904:INFO:data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
-2021-07-28 22:42:21,650:INFO:data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
-2021-07-28 22:42:22,481:INFO:__main__: 'data_cleaning' script was successfully executed. Runnig time was 26.28 secs
-2021-07-28 22:42:26,261:INFO:data_uploading: Parquet file 'Fact_Sales' was successfully loaded to S3
-2021-07-28 22:42:26,514:INFO:data_uploading: Parquet file 'Dim_Sales_Channels' was successfully loaded to S3
-2021-07-28 22:42:26,817:INFO:data_uploading: Parquet file 'Dim_Products' was successfully loaded to S3
-2021-07-28 22:42:27,075:INFO:data_uploading: Parquet file 'Dim_Dates' was successfully loaded to S3
-2021-07-28 22:42:27,873:INFO:__main__: 'data_uploading' script was successfully executed. Runnig time was 5.39 secs
-2021-07-28 22:42:27,874:INFO:__main__: 'pipeline' script was successfully executed. Runnig time was 68.77 secs
+2021-08-10 16:39:22,956:INFO:data_extraction: Table 'so' was successfully loaded. 15281 rows loaded.
+2021-08-10 16:39:27,116:INFO:data_extraction: Table 'soitem' was successfully loaded. 100537 rows loaded.
+2021-08-10 16:39:28,592:INFO:data_extraction: Table 'product' was successfully loaded. 8656 rows loaded.
+2021-08-10 16:39:30,045:INFO:data_extraction: Table 'part' was successfully loaded. 8981 rows loaded.
+2021-08-10 16:39:31,005:INFO:data_extraction: Table 'qbclass' was successfully loaded. 18 rows loaded.
+2021-08-10 16:39:31,335:INFO:data_extraction: Table 'so' was successfully reduced to required fields.
+2021-08-10 16:39:31,369:INFO:data_extraction: Table 'soitem' was successfully reduced to required fields.
+2021-08-10 16:39:31,385:INFO:data_extraction: Table 'product' was successfully reduced to required fields.
+2021-08-10 16:39:31,419:INFO:data_extraction: Table 'part' was successfully reduced to required fields.
+2021-08-10 16:39:31,442:INFO:data_extraction: Table 'qbclass' was successfully reduced to required fields.
+2021-08-10 16:39:35,085:INFO:data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-08-10 16:39:38,039:INFO:data_extraction: DataFrame 'reduced_so' was successfully saved as parquet file
+2021-08-10 16:39:41,468:INFO:data_extraction: DataFrame 'reduced_soitem' was successfully saved as parquet file
+2021-08-10 16:39:41,868:INFO:data_extraction: DataFrame 'reduced_product' was successfully saved as parquet file
+2021-08-10 16:39:44,194:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
+2021-08-10 16:39:44,492:INFO:data_extraction: DataFrame 'reduced_qbclass' was successfully saved as parquet file
+2021-08-10 16:44:32,851:INFO:data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3021 rows loaded
+2021-08-10 16:44:33,132:INFO:data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 100537 rows loaded
+2021-08-10 16:44:33,444:INFO:data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8656 rows loaded
+2021-08-10 16:44:33,710:INFO:data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 8981 rows loaded
+2021-08-10 16:44:33,960:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status 80, 85, 90 or 95 were filtered out
+2021-08-10 16:44:34,741:INFO:data_cleaning: Row count is 2994
+2021-08-10 16:44:34,804:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Currency field with value null was replaced with 1 (USD)
+2021-08-10 16:44:34,976:INFO:data_cleaning: Row count is 2994
+2021-08-10 16:44:35,210:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized
+2021-08-10 16:44:35,366:INFO:data_cleaning: Row count is 2994
+2021-08-10 16:44:35,413:INFO:data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_req'
+2021-08-10 16:44:35,741:INFO:data_cleaning: Row count is 99
+2021-08-10 16:44:36,476:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: Samples, RMA, Closed Channel or Uncategorized were filtered out
+2021-08-10 16:44:36,741:INFO:data_cleaning: Row count is 2895
+2021-08-10 16:44:36,757:INFO:data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered
+2021-08-10 16:44:36,944:INFO:data_cleaning: Row count is 85070
+2021-08-10 16:44:36,960:INFO:data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits
+2021-08-10 16:44:37,132:INFO:data_cleaning: Row count is 85070
+2021-08-10 16:44:37,226:INFO:data_cleaning: Transformation on DataFrame 'part' completed: Columns: len, width and height were rounded to 2 digits
+2021-08-10 16:44:37,429:INFO:data_cleaning: Row count is 8981
+2021-08-10 16:44:37,507:INFO:data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'
+2021-08-10 16:44:38,901:INFO:data_cleaning: Row count is 14849
+2021-08-10 16:44:38,913:INFO:data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'
+2021-08-10 16:44:39,413:INFO:data_cleaning: Row count is 14849
+2021-08-10 16:44:39,429:INFO:data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'
+2021-08-10 16:44:39,897:INFO:data_cleaning: Row count is 14849
+2021-08-10 16:44:41,069:INFO:data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-08-10 16:44:41,710:INFO:data_cleaning: Table Dim_Products was successfully saved as Parquet file
+2021-08-10 16:44:42,085:INFO:data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-08-10 16:44:42,581:INFO:data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-08-10 16:47:13,991:INFO:data_extraction: Table 'so' was successfully loaded. 15281 rows loaded.
+2021-08-10 16:47:18,601:INFO:data_extraction: Table 'soitem' was successfully loaded. 100537 rows loaded.
+2021-08-10 16:47:19,726:INFO:data_extraction: Table 'product' was successfully loaded. 8656 rows loaded.
+2021-08-10 16:47:20,851:INFO:data_extraction: Table 'part' was successfully loaded. 8981 rows loaded.
+2021-08-10 16:47:21,679:INFO:data_extraction: Table 'qbclass' was successfully loaded. 18 rows loaded.
+2021-08-10 16:47:21,960:INFO:data_extraction: Table 'so' was successfully reduced to required fields.
+2021-08-10 16:47:21,991:INFO:data_extraction: Table 'soitem' was successfully reduced to required fields.
+2021-08-10 16:47:22,007:INFO:data_extraction: Table 'product' was successfully reduced to required fields.
+2021-08-10 16:47:22,038:INFO:data_extraction: Table 'part' was successfully reduced to required fields.
+2021-08-10 16:47:22,069:INFO:data_extraction: Table 'qbclass' was successfully reduced to required fields.
+2021-08-10 16:47:24,554:INFO:data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-08-10 16:47:27,569:INFO:data_extraction: DataFrame 'reduced_so' was successfully saved as parquet file
+2021-08-10 16:47:30,929:INFO:data_extraction: DataFrame 'reduced_soitem' was successfully saved as parquet file
+2021-08-10 16:47:31,382:INFO:data_extraction: DataFrame 'reduced_product' was successfully saved as parquet file
+2021-08-10 16:47:33,913:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
+2021-08-10 16:47:34,413:INFO:data_extraction: DataFrame 'reduced_qbclass' was successfully saved as parquet file
+2021-08-10 16:49:33,788:INFO:data_uploading: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 14849 rows loaded
+2021-08-10 16:49:43,147:INFO:data_uploading: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 8981 rows loaded
+2021-08-10 16:49:49,804:INFO:data_uploading: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-08-10 16:49:55,944:INFO:data_uploading: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-08-10 16:51:46,741:INFO:data_extraction: Table 'so' was successfully loaded. 15281 rows loaded.
+2021-08-10 16:51:49,038:INFO:data_extraction: Table 'soitem' was successfully loaded. 100537 rows loaded.
+2021-08-10 16:51:50,179:INFO:data_extraction: Table 'product' was successfully loaded. 8656 rows loaded.
+2021-08-10 16:51:51,210:INFO:data_extraction: Table 'part' was successfully loaded. 8981 rows loaded.
+2021-08-10 16:51:52,069:INFO:data_extraction: Table 'qbclass' was successfully loaded. 18 rows loaded.
+2021-08-10 16:51:52,366:INFO:data_extraction: Table 'so' was successfully reduced to required fields.
+2021-08-10 16:51:52,397:INFO:data_extraction: Table 'soitem' was successfully reduced to required fields.
+2021-08-10 16:51:52,413:INFO:data_extraction: Table 'product' was successfully reduced to required fields.
+2021-08-10 16:51:52,444:INFO:data_extraction: Table 'part' was successfully reduced to required fields.
+2021-08-10 16:51:52,476:INFO:data_extraction: Table 'qbclass' was successfully reduced to required fields.
+2021-08-10 16:51:55,069:INFO:data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-08-10 16:51:57,026:INFO:data_extraction: DataFrame 'reduced_so' was successfully saved as parquet file
+2021-08-10 16:51:59,023:INFO:data_extraction: DataFrame 'reduced_soitem' was successfully saved as parquet file
+2021-08-10 16:51:59,491:INFO:data_extraction: DataFrame 'reduced_product' was successfully saved as parquet file
+2021-08-10 16:52:02,007:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
+2021-08-10 16:52:02,412:INFO:data_extraction: DataFrame 'reduced_qbclass' was successfully saved as parquet file
+2021-08-10 16:52:02,486:INFO:__main__: 'data_extraction' script was successfully executed. Runnig time was 30.78 secs
+2021-08-10 16:52:16,101:INFO:data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3021 rows loaded
+2021-08-10 16:52:16,382:INFO:data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 100537 rows loaded
+2021-08-10 16:52:16,679:INFO:data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8656 rows loaded
+2021-08-10 16:52:16,960:INFO:data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 8981 rows loaded
+2021-08-10 16:52:17,210:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status 80, 85, 90 or 95 were filtered out
+2021-08-10 16:52:17,913:INFO:data_cleaning: Row count is 2994
+2021-08-10 16:52:17,976:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Currency field with value null was replaced with 1 (USD)
+2021-08-10 16:52:18,194:INFO:data_cleaning: Row count is 2994
+2021-08-10 16:52:18,429:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized
+2021-08-10 16:52:18,585:INFO:data_cleaning: Row count is 2994
+2021-08-10 16:52:18,632:INFO:data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_req'
+2021-08-10 16:52:18,944:INFO:data_cleaning: Row count is 99
+2021-08-10 16:52:19,726:INFO:data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: Samples, RMA, Closed Channel or Uncategorized were filtered out
+2021-08-10 16:52:20,116:INFO:data_cleaning: Row count is 2895
+2021-08-10 16:52:20,179:INFO:data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered
+2021-08-10 16:52:20,413:INFO:data_cleaning: Row count is 85070
+2021-08-10 16:52:20,460:INFO:data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits
+2021-08-10 16:52:20,647:INFO:data_cleaning: Row count is 85070
+2021-08-10 16:52:20,710:INFO:data_cleaning: Transformation on DataFrame 'part' completed: Columns: len, width and height were rounded to 2 digits
+2021-08-10 16:52:20,882:INFO:data_cleaning: Row count is 8981
+2021-08-10 16:52:20,944:INFO:data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'
+2021-08-10 16:52:21,721:INFO:data_cleaning: Row count is 14849
+2021-08-10 16:52:21,726:INFO:data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'
+2021-08-10 16:52:22,179:INFO:data_cleaning: Row count is 14849
+2021-08-10 16:52:22,194:INFO:data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'
+2021-08-10 16:52:22,601:INFO:data_cleaning: Row count is 14849
+2021-08-10 16:52:23,694:INFO:data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-08-10 16:52:24,522:INFO:data_cleaning: Table Dim_Products was successfully saved as Parquet file
+2021-08-10 16:52:24,819:INFO:data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-08-10 16:52:25,429:INFO:data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-08-10 16:52:25,585:INFO:__main__: 'data_cleaning' script was successfully executed. Runnig time was 23.1 secs
+2021-08-10 16:52:48,210:INFO:data_uploading: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 14849 rows loaded
+2021-08-10 16:52:54,650:INFO:data_uploading: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 8981 rows loaded
+2021-08-10 16:53:00,390:INFO:data_uploading: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-08-10 16:53:06,414:INFO:data_uploading: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-08-10 16:53:06,460:INFO:__main__: 'data_uploading' script was successfully executed. Runnig time was 40.88 secs
+2021-08-10 16:53:06,476:INFO:__main__: 'pipeline' script was successfully executed. Runnig time was 94.77 secs
