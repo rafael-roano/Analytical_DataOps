@@ -69,7 +69,7 @@ def table_to_dataframe (table):
         DataFrame
     '''
     
-    dataframe = sql_session.read.format("jdbc")\
+    dataframe = extraction_session.read.format("jdbc")\
                     .option("url", url)\
                     .option("driver", driver)\
                     .option("dbtable", table)\
@@ -160,9 +160,20 @@ def masking_check (df, df_name, fields):
     #     sys.exit()
 
 
-
 # Start SparkSession (entry point to Spark)
 extraction_session = SparkSession.builder.master("local[*]").appName("Data_Extraction").getOrCreate()
+sc = extraction_session.sparkContext
+
+# Hadoop Configuration
+
+hadoop_conf = sc._jsc.hadoopConfiguration()
+access_key = config.a_k
+secret_key = config.s_k
+endpoint = "https://s3.us-west-1.amazonaws.com"
+
+hadoop_conf.set("fs.s3a.access.key", access_key)
+hadoop_conf.set("fs.s3a.secret.key", secret_key)
+hadoop_conf.set("fs.s3a.endpoint", endpoint)
 
 # MySQL database configuration values
 url = config.db_url
@@ -202,7 +213,7 @@ schema_check(reduced_qbclass, "qbclass", 4)
 # Mask part num column in reduced_part table based on dictionary with masking values. Mask by substitution.
 
 # CSV file from local machine loaded to DataFrame -> DataFrame collected into an array
-mask = sql_session.read.option("header", True).csv("C:\\Users\\FBLServer\\Documents\\c\\m.csv")
+mask = extraction_session.read.option("header", True).csv("C:\\Users\\FBLServer\\Documents\\c\\m.csv")
 mask_array = mask.collect()
 mask_dict = {}
 
@@ -235,6 +246,23 @@ logger.info(f"DataFrame 'masked_part' was successfully saved as parquet file")
 reduced_qbclass.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_qbclass")
 reduced_qbclass.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_qbclass.csv")
 logger.info(f"DataFrame 'reduced_qbclass' was successfully saved as parquet file")
+
+# Write Parquet files into S3 bucket
+reduced_so.write.parquet("s3a://aaa-raw-data/mysql_extracted_data/r_so")
+rows = reduced_so.count()
+logger.info(f"Parquet file 'r_so' was successfully uploaded as Parquet file to S3 bucket. {rows} rows loaded")
+
+reduced_soitem.write.parquet("s3a://aaa-raw-data/mysql_extracted_data/r_soitem")
+rows = reduced_soitem.count()
+logger.info(f"Parquet file 'r_soitem' was successfully uploaded as Parquet file to S3 bucket. {rows} rows loaded")
+
+reduced_product.write.parquet("s3a://aaa-raw-data/mysql_extracted_data/r_product")
+rows = reduced_product.count()
+logger.info(f"Parquet file 'r_product' was successfully uploaded as Parquet file to S3 bucket. {rows} rows loaded")
+
+masked_part.write.parquet("s3a://aaa-raw-data/mysql_extracted_data/m_part")
+rows = masked_part.count()
+logger.info(f"Parquet file 'm_part' was successfully uploaded as Parquet file to S3 bucket. {rows} rows loaded")
 
 # Record script running time
 # script_time = round(time.time() - star_time, 2)

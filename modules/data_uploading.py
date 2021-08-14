@@ -57,7 +57,7 @@ file_handler.setFormatter(formatter)
 uploading_session = SparkSession.builder.master("local[*]").appName('Data_Uploading').getOrCreate()
 sc = uploading_session.sparkContext
 
-# Configure Hadoop
+# Hadoop Configuration
 
 hadoop_conf = sc._jsc.hadoopConfiguration()
 access_key = config.a_k
