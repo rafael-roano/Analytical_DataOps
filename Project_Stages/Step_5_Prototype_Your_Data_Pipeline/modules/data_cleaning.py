@@ -1,3 +1,5 @@
+# Prototype version of data_cleaning module
+
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import StructType, StructField, StringType, BooleanType, TimestampType, IntegerType
@@ -38,7 +40,7 @@ logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 logger.addHandler(console_handler)
 
-file_handler = logging.FileHandler("pipeline.log")
+file_handler = logging.FileHandler("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Open-ended_Capstone\\data\\logs\\pipeline.log")
 logger.addHandler(file_handler)
 
 # Filter setup (based on the message level)
@@ -51,21 +53,19 @@ file_handler.setFormatter(formatter)
 
 
 # Start SparkSession (entry point to Spark)
-cleaning_session = SparkSession.builder.appName('Data_Cleaning').getOrCreate()
-sc = cleaning_session.sparkContext
-sc.setLogLevel("ERROR")
+cleaning_session = SparkSession.builder.master("local[*]").appName('Data_Cleaning').getOrCreate()
 
 # Read Parquet files into DataFrames
-so = cleaning_session.read.parquet("s3a://aaa-raw-data/mysql_extracted_data/r_so")
+so = cleaning_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\Extracted_MySQL_Tables\\r_so")
 rows = so.count()
 logger.info(f"Parquet file 'r_so' was successfully loaded into DataFrame. {rows} rows loaded")
-soitem = cleaning_session.read.parquet("s3a://aaa-raw-data/mysql_extracted_data/r_soitem")
+soitem = cleaning_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_soitem")
 rows = soitem.count()
 logger.info(f"Parquet file 'r_soitem' was successfully loaded into DataFrame. {rows} rows loaded")
-product = cleaning_session.read.parquet("s3a://aaa-raw-data/mysql_extracted_data/r_product")
+product = cleaning_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_product")
 rows = product.count()
 logger.info(f"Parquet file 'r_product' was successfully loaded into DataFrame. {rows} rows loaded")
-part = cleaning_session.read.parquet("s3a://aaa-raw-data/mysql_extracted_data/m_part")
+part = cleaning_session.read.parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\m_part")
 rows = part.count()
 logger.info(f"Parquet file 'm_part' was successfully loaded into DataFrame. {rows} rows loaded")
 
@@ -116,7 +116,7 @@ not_req = so.filter(so.sales_channel.isin(["Samples", "RMA", "Closed Channel", "
 logger.info(f"Transactions not required in Fact_Sales table were loaded into DataFrame 'not_req'")
 rows =not_req.count()
 logger.info(f"Row count is {rows}")
-not_req.write.mode('overwrite').csv("s3a://aaa-raw-data/mysql_extracted_data/not_required_trans")
+not_req.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\not_required_trans")
 
 # Remove transactions not required from "so" DataFrame (Samples, RMA, Closed Channel, Uncategorized)
 so = so.select("id", "currencyId", "customerId", "dateCompleted", "dateCreated", "locationGroupId", "qbClassId", "statusId", "sales_channel")\
@@ -178,12 +178,14 @@ categorized_items.printSchema()
 # Create 'Fact_Sales' table
 Fact_Sales = categorized_items.select(categorized_items.dateCreated.alias("Date_Id"), categorized_items.sales_channel.alias("Sales_Channel_Id"), \
                         categorized_items.masked_num.alias("Product_Id"), categorized_items.qtyOrdered_r.alias("Units_Sold"))
-Fact_Sales.write.mode('overwrite').parquet("s3a://aaa-raw-data/Star_Schema_Tables/Fact_Sales")
+Fact_Sales.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Fact_Sales")
 logger.info(f"Table 'Fact_Sales' was successfully saved as Parquet file")
+
+Fact_Sales.printSchema()
 
 # Create 'Dim_Products' table
 Dim_Products = part.select("id", "masked_num", "len_r", "width_r", "height_r")
-Dim_Products.write.mode('overwrite').parquet("s3a://aaa-raw-data/Star_Schema_Tables/Dim_Products")
+Dim_Products.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Products")
 logger.info(f"Table Dim_Products was successfully saved as Parquet file")
 
 # Create 'Dim_Sales_Channels' table
@@ -195,22 +197,22 @@ sales_cat_schema = StructType([
     
 ])
 
-Dim_Sales_Channels = cleaning_session.read.option("header", True).schema(sales_cat_schema).csv("s3a://aaa-raw-data/other_tables/sales_cat.csv")
+Dim_Sales_Channels = cleaning_session.read.option("header", True).schema(sales_cat_schema).csv("C:\\Users\\FBLServer\\Documents\\c\\sales_cat.csv")
 Dim_Sales_Channels.printSchema()
-Dim_Sales_Channels.write.mode('overwrite').parquet("s3a://aaa-raw-data/Star_Schema_Tables/Dim_Sales_Channels")
+Dim_Sales_Channels.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Sales_Channels")
 logger.info(f"Table 'Dim_Sales_Channels' was successfully saved as Parquet file")
 
 # Create 'Dim_Dates' table
 date_schema = StructType([
 	StructField("date", TimestampType(), False),
-    StructField("day", IntegerType(), False),
+    StructField("year", IntegerType(), False),
     StructField("month", IntegerType(), False),
-    StructField("year", IntegerType(), False),    
+    StructField("day", IntegerType(), False),    
 ])
 
-Dim_Dates = cleaning_session.read.option("header", True).schema(date_schema).csv("s3a://aaa-raw-data/other_tables/date.csv")
+Dim_Dates = cleaning_session.read.option("header", True).schema(date_schema).csv("C:\\Users\\FBLServer\\Documents\\c\\date.csv")
 Dim_Dates.printSchema()
-Dim_Dates.write.mode('overwrite').parquet("s3a://aaa-raw-data/Star_Schema_Tables/Dim_Dates")
+Dim_Dates.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Star_Schema_Tables\\Dim_Dates")
 logger.info(f"Table 'Dim_Dates' was successfully saved as Parquet file")
 
 # Record script running time

@@ -1,3 +1,6 @@
+# Prototype version of data_extraction module
+
+
 # import findspark
 # findspark.init()
 # findspark.find()
@@ -69,7 +72,7 @@ def table_to_dataframe (table):
         DataFrame
     '''
     
-    dataframe = sql_session.read.format("jdbc")\
+    dataframe = extraction_session.read.format("jdbc")\
                     .option("url", url)\
                     .option("driver", driver)\
                     .option("dbtable", table)\
@@ -202,7 +205,7 @@ schema_check(reduced_qbclass, "qbclass", 4)
 # Mask part num column in reduced_part table based on dictionary with masking values. Mask by substitution.
 
 # CSV file from local machine loaded to DataFrame -> DataFrame collected into an array
-mask = sql_session.read.option("header", True).csv("C:\\Users\\FBLServer\\Documents\\c\\m.csv")
+mask = extraction_session.read.option("header", True).csv("C:\\Users\\FBLServer\\Documents\\c\\m.csv")
 mask_array = mask.collect()
 mask_dict = {}
 

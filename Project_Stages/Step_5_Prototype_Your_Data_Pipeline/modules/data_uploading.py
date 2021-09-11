@@ -1,3 +1,5 @@
+# Prototype version of data_uploading module
+
 from pyspark.sql import SparkSession
 import logging
 import sys
