@@ -195,7 +195,7 @@ reduced_qbclass = qbclass.select("id", "activeFlag", "name", "parentId")
 schema_check(reduced_qbclass, "qbclass", 4)
 
 
-# Mask part num column in reduced_part table based on dictionary with masking values. Mask by substitution.
+# Mask "part num" column in reduced_part table based on dictionary with masking values (mask by substitution).
 
 # CSV file from local machine loaded to DataFrame -> DataFrame collected into an array
 mask = extraction_session.read.option("header", True).csv("/usr/local/spark/resources/x/m.csv")

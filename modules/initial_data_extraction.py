@@ -1,24 +1,16 @@
-# Prototype version of data_extraction module
-
-
-# import findspark
-# findspark.init()
-# findspark.find()
-
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import StringType
 import logging
+import time
 import sys
 
-sys.path.append("C:\\Users\\FBLServer\\Documents\\c\\")
+sys.path.append("/usr/local/spark/resources/x/")
 import config
 
-# import time
 
 # Start timer to record script running time
-# star_time = time.time()
-
+star_time = time.time()
 
 # Logging setup
 class HandlerFilter():
@@ -43,14 +35,14 @@ class HandlerFilter():
         return log_record.levelno == self.__level
 
 # Logger setup (emit log records)
-logger = logging.getLogger("data_extraction")
+logger = logging.getLogger("intial_data_extraction")
 logger.setLevel(logging.INFO)
 
 # Handler setup (send the log records to the appropriate destination)
 console_handler = logging.StreamHandler()
 logger.addHandler(console_handler)
 
-file_handler = logging.FileHandler("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Open-ended_Capstone\\data\\logs\\pipeline.log")
+file_handler = logging.FileHandler("/usr/local/spark/resources/pipeline.log")
 logger.addHandler(file_handler)
 
 # Filter setup (based on the message level)
@@ -77,7 +69,7 @@ def table_to_dataframe (table):
                     .option("driver", driver)\
                     .option("dbtable", table)\
                     .option("user", u)\
-                    .option("password", p).load() 
+                    .option("password", p).load()
 
     return dataframe
 
@@ -165,14 +157,14 @@ def masking_check (df, df_name, fields):
 
 
 # Start SparkSession (entry point to Spark)
-extraction_session = SparkSession.builder.master("local[*]").appName("Data_Extraction").getOrCreate()
+extraction_session = SparkSession.builder.master("spark://spark:7077").appName("Initial_Data_Extraction").getOrCreate()
+
 
 # MySQL database configuration values
 url = config.db_url
 driver = "com.mysql.cj.jdbc.Driver"
 u = config.db_u
 p = config.db_p
-tables = ["so", "soitem", "product", "part", "qbclass"]
 
 
 # Read MySQL tables into DataFrames
@@ -184,13 +176,12 @@ product = table_to_dataframe("product")
 loaded_df_check (product, "product")
 part = table_to_dataframe("part")
 loaded_df_check (part, "part")
-qbclass = table_to_dataframe("qbclass")
-loaded_df_check (qbclass, "qbclass")
 
 
-# Select only required columns. For "so" table, selecting only transactions created on 2021
+# Extract transactions at order level for specific time period (initial extraction). Reduce tables to required columns only.
+
 reduced_so = so.select("id", "num", "currencyId", "customerId", "dateCompleted", "dateCreated", "locationGroupId", "qbClassId", "statusId")\
-                .filter(F.col("dateCreated").between("2021-01-01 00:00:00", "2021-12-31 23:59:59"))
+                .filter(F.col("dateCreated").between("2021-01-01 00:00:00", "2021-09-11 23:59:59"))
 schema_check(reduced_so, "so", 9)
 reduced_soitem = soitem.select("id", "productId", "qtyOrdered", "soId", "typeId")
 schema_check(reduced_soitem, "soitem", 5)
@@ -198,16 +189,12 @@ reduced_product = product.select("id", "partId")
 schema_check(reduced_product, "product", 2)
 reduced_part = part.select("id", "height", "len", "num", "typeId", "width", "customFields")
 schema_check(reduced_part, "part", 7)
-reduced_qbclass = qbclass.select("id", "activeFlag", "name", "parentId")
-schema_check(reduced_qbclass, "qbclass", 4)
-
-reduced_part.show(20)
 
 
-# Mask part num column in reduced_part table based on dictionary with masking values. Mask by substitution.
+# Mask "part num" column in reduced_part table based on dictionary with masking values (mask by substitution).
 
 # CSV file from local machine loaded to DataFrame -> DataFrame collected into an array
-mask = extraction_session.read.option("header", True).csv("C:\\Users\\FBLServer\\Documents\\c\\m.csv")
+mask = extraction_session.read.option("header", True).csv("/usr/local/spark/resources/x/m.csv")
 mask_array = mask.collect()
 mask_dict = {}
 
@@ -218,29 +205,25 @@ for row in mask_array:
 
 # Create DataFrame with masked part num column (using UDF) and droping original part num column
 udf_part_masking = F.udf(part_masking, StringType())
-
-
 masked_part = reduced_part.withColumn("masked_num", udf_part_masking(reduced_part.num)).drop(reduced_part.num)
 masking_check(masked_part, "reduced_part", 7)
 
 
-# Save DataFrames (locally) into parquet files
-reduced_so.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_so")
-reduced_so.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_so.csv")
-logger.info(f"DataFrame 'reduced_so' was successfully saved as parquet file")
-reduced_soitem.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_soitem")
-reduced_soitem.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_soitem.csv")
-logger.info(f"DataFrame 'reduced_soitem' was successfully saved as parquet file")
-reduced_product.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_product")
-reduced_product.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_product.csv")
-logger.info(f"DataFrame 'reduced_product' was successfully saved as parquet file")
-masked_part.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\m_part")
-masked_part.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\m_part.csv")
-logger.info(f"DataFrame 'masked_part' was successfully saved as parquet file")
-reduced_qbclass.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_qbclass")
-reduced_qbclass.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\PythonScripts\\SB\\Output\\Extracted_MySQL_Tables\\r_qbclass.csv")
-logger.info(f"DataFrame 'reduced_qbclass' was successfully saved as parquet file")
+# Save DataFrames (locally) into Parquet and CSV files
+reduced_so.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_so")
+reduced_so.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_so.csv")
+logger.info(f"DataFrame 'reduced_so' was successfully saved as Parquet and CSV file")
+reduced_soitem.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_soitem")
+reduced_soitem.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_soitem.csv")
+logger.info(f"DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file")
+reduced_product.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_product")
+reduced_product.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_product.csv")
+logger.info(f"DataFrame 'reduced_product' was successfully saved as Parquet and CSV file")
+masked_part.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/m_part")
+masked_part.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/m_part.csv")
+logger.info(f"DataFrame 'masked_part' was successfully saved as Parquet and CSV file")
+
 
 # Record script running time
-# script_time = round(time.time() - star_time, 2)
-# logger.info(f"Script runnig time was {script_time} secs")
+script_time = round(time.time() - star_time, 2)
+logger.info(f"'initial_data_extraction' script was successfully executed. Runnig time was {script_time} secs")
