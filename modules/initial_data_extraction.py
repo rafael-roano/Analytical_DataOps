@@ -5,7 +5,7 @@ import logging
 import time
 import sys
 
-sys.path.append("/usr/local/spark/resources/x/")
+sys.path.append("C:\\Users\\FBLServer\\Documents\\c\\")
 import config
 
 
@@ -42,7 +42,7 @@ logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 logger.addHandler(console_handler)
 
-file_handler = logging.FileHandler("/usr/local/spark/resources/pipeline.log")
+file_handler = logging.FileHandler("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\pipeline.log")
 logger.addHandler(file_handler)
 
 # Filter setup (based on the message level)
@@ -58,69 +58,90 @@ def table_to_dataframe (table):
     '''Read table from MySQL database and returns a DataFrame.
             
     Args:
-        table (str): Table's name.
+        table (str): Table's name
     
     Returns:
         DataFrame
     '''
+    try:
+
+        df = extraction_session.read.format("jdbc")\
+                        .option("url", url)\
+                        .option("driver", driver)\
+                        .option("dbtable", table)\
+                        .option("user", u)\
+                        .option("password", p).load()
     
-    dataframe = extraction_session.read.format("jdbc")\
-                    .option("url", url)\
-                    .option("driver", driver)\
-                    .option("dbtable", table)\
-                    .option("user", u)\
-                    .option("password", p).load()
-
-    return dataframe
-
-
-def loaded_df_check (df, table_name):
-    '''Confirm table was read successfully into DataFrame.
-            
-    Args:
-        df (dataframe): DataFrame to check.
-        table_name (str): Source table name.
-    '''
-    if df.rdd.isEmpty():
-        logger.error(f"Table '{table_name}' is empty.")
+    except:
+        logger.critical(f"Unexpected error during '{table}' table reading from database. Unexpected error: {sys.exc_info()}. Progam aborted.")
+        sys.exit()
+          
     else:
         rows = df.count()
-        logger.info(f"Table '{table_name}' was successfully loaded. {rows} rows loaded.")
+        logger.info(f"Table '{table}' was successfully loaded. {rows} rows loaded.")
+    
+    return df
 
 
-def schema_check (df, table_name, fields):
-    '''Confirm DataFrame was reduced successfully to required fields.
+def reduce_so_table (df, fields, field_count, start_date, finish_date):
+    '''Select only required fields and 'Date Created' range from 'so' table.
             
     Args:
-        df (dataframe): DataFrame to check.
-        table_name (str): Source table name.
-        fields (int): Field count.
+        df (dataframe): DataFrame to reduce
+        fields (list): Fields to keep from table
+        field_count (int): Field count to be reduced to
+        start_date (str): Time window start date
+        finish_date (str): Time window finisn date
     '''
 
-    if len(df.columns) == fields:
-        logger.info(f"Table '{table_name}' was successfully reduced to required fields.")
+    reduced_so = df.select(fields).filter(F.col("dateCreated").between(start_date, finish_date))
+
+    if len(reduced_so.columns) == field_count:
+        rows = reduced_so.count()
+        logger.info(f"Table 'so' was successfully reduced to required fields: {field_count}. Date range applied is: {start_date} - {finish_date}. Row count is {rows}.")
+        return reduced_so
     else:
-        logger.critical(f"Table '{table_name}' was not reduced to required fields. Program aborted.")
+        logger.critical(f"Table 'so' was not reduced to required fields. Program aborted.")
         sys.exit()
 
 
-def part_masking(num):
+def reduce_table (df, fields, field_count, table_name):
+    '''Select only required fields from table.
+            
+    Args:
+        df (dataframe): DataFrame to reduce
+        fields (list): Fields to keep from table
+        field_count (int): Field count to be reduced to
+        table_name (str): Source table name
+    '''
+   
+    reduced_df = df.select(fields)
+
+    if len(reduced_df.columns) == field_count:
+        rows = reduced_df.count()
+        logger.info(f"Table '{table_name}' was successfully reduced to required fields: {field_count}. Row count is {rows}.")
+        return reduced_df
+    else:
+        logger.critical(f"Table '{table_name}' was not reduced to required fields. Program aborted.")
+        sys.exit()
+        
+
+@F.udf(returnType=StringType())
+def mask_part(num):
     '''Mask part num based on masking dictionary.
             
     Args:
-        num (str): Original part num.
+        num (str): Original part number
     
     Returns:
         str
     '''
-
     masked_chars = []
     masked = ""
     
     for char in num:
         
         if char in mask_dict.keys():
-
             masked_char = mask_dict.get(char)
             masked_chars.append(masked_char)
         else:
@@ -129,35 +150,29 @@ def part_masking(num):
     return masked.join(masked_chars)
 
 
-def masking_check (df, df_name, fields):
+def check_masking (df, field_count):
     '''
     Confirm DataFrame was masked successfully.
             
     Args:
-        df (dataframe): DataFrame to check.
-        df_name (str): DataFrame name.
-        fields (int): Field count.
+        df (dataframe): DataFrame to check
+        field_count (int): Field count
     '''
 
     # Filter column masked_num to check values with "."; should equal zero
-    unmasked = masked_part.filter(masked_part.masked_num.contains('.')).collect()
+    unmasked = df.filter(df.masked_num.contains('.')).collect()
     
-    if (len(df.columns) == fields) and (len(unmasked) == 0):
-        logger.info(f"DataFrame '{df_name}' was successfully masked.")
+    if (len(df.columns) == field_count) and (len(unmasked) == 0):
+        logger.info(f"DataFrame 'reduced_part' was successfully masked.")
     else:
-        logger.critical(f"DataFrame '{df_name}' was not successfully masked. Program aborted.")
+        logger.critical(f"DataFrame 'reduced_part' was not successfully masked. Program aborted.")
         sys.exit()
-
-    # if len(df.columns) == fields:
-    #     logger.info(f"DataFrame {df_name} was successfully masked.")
-    # else:
-    #     logger.critical(f"DataFrame {df_name} was not successfully masked. Program aborted.")
-    #     sys.exit()
 
 
 
 # Start SparkSession (entry point to Spark)
-extraction_session = SparkSession.builder.master("spark://spark:7077").appName("Initial_Data_Extraction").getOrCreate()
+# extraction_session = SparkSession.builder.master("spark://spark:7077").appName("Initial_Data_Extraction").getOrCreate()
+extraction_session = SparkSession.builder.master("local[*]").appName("Data_Extraction").getOrCreate()
 
 
 # MySQL database configuration values
@@ -169,32 +184,32 @@ p = config.db_p
 
 # Read MySQL tables into DataFrames
 so = table_to_dataframe("so")
-loaded_df_check (so, "so")
 soitem = table_to_dataframe("soitem")
-loaded_df_check (soitem, "soitem")
 product = table_to_dataframe("product")
-loaded_df_check (product, "product")
 part = table_to_dataframe("part")
-loaded_df_check (part, "part")
 
 
-# Extract transactions at order level for specific time period (initial extraction). Reduce tables to required columns only.
-
-reduced_so = so.select("id", "num", "currencyId", "customerId", "dateCompleted", "dateCreated", "locationGroupId", "qbClassId", "statusId")\
-                .filter(F.col("dateCreated").between("2021-01-01 00:00:00", "2021-09-11 23:59:59"))
-schema_check(reduced_so, "so", 9)
-reduced_soitem = soitem.select("id", "productId", "qtyOrdered", "soId", "typeId")
-schema_check(reduced_soitem, "soitem", 5)
-reduced_product = product.select("id", "partId")
-schema_check(reduced_product, "product", 2)
-reduced_part = part.select("id", "height", "len", "num", "typeId", "width", "customFields")
-schema_check(reduced_part, "part", 7)
+# Reduce 'so' table to required fields and extract transactions from specific time period (initial extraction).
+so_req_fields = ["id", "num", "currencyId", "customerId", "dateCompleted", "dateCreated", "locationGroupId", "qbClassId", "statusId"]
+start_date = "2021-01-01 00:00:00"
+finish_date = "2021-09-11 23:59:59"
+reduced_so = reduce_so_table(so, so_req_fields, 9, start_date, finish_date)
 
 
-# Mask "part num" column in reduced_part table based on dictionary with masking values (mask by substitution).
+# Reduce tables to required fields only.
+soitem_req_fields = ["id", "productId", "qtyOrdered", "soId", "typeId"]
+reduced_soitem = reduce_table(soitem, soitem_req_fields, 5, "soitem")
+product_req_fields = ["id", "partId"]
+reduced_product = reduce_table(product, product_req_fields, 2, "product")
+part_req_fields = ["id", "height", "len", "num", "typeId", "width", "customFields"]
+part_field_count = 7
+reduced_part = reduce_table(part, part_req_fields, part_field_count, "part")
+
+
+## Mask part num column in reduced_part table based on dictionary with masking values. Mask by substitution.
 
 # CSV file from local machine loaded to DataFrame -> DataFrame collected into an array
-mask = extraction_session.read.option("header", True).csv("/usr/local/spark/resources/x/m.csv")
+mask = extraction_session.read.option("header", True).csv("C:\\Users\\FBLServer\\Documents\\c\\m.csv")
 mask_array = mask.collect()
 mask_dict = {}
 
@@ -204,26 +219,26 @@ for row in mask_array:
 
 
 # Create DataFrame with masked part num column (using UDF) and droping original part num column
-udf_part_masking = F.udf(part_masking, StringType())
-masked_part = reduced_part.withColumn("masked_num", udf_part_masking(reduced_part.num)).drop(reduced_part.num)
-masking_check(masked_part, "reduced_part", 7)
+masked_part = reduced_part.withColumn("masked_num", mask_part(reduced_part.num)).drop(reduced_part.num)
+check_masking(masked_part, part_field_count)
+
 
 
 # Save DataFrames (locally) into Parquet and CSV files
-reduced_so.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_so")
-reduced_so.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_so.csv")
+reduced_so.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_so")
+reduced_so.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_so.csv")
 logger.info(f"DataFrame 'reduced_so' was successfully saved as Parquet and CSV file")
-reduced_soitem.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_soitem")
-reduced_soitem.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_soitem.csv")
+reduced_soitem.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_soitem")
+reduced_soitem.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_soitem.csv")
 logger.info(f"DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file")
-reduced_product.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_product")
-reduced_product.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_product.csv")
+reduced_product.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_product")
+reduced_product.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_product.csv")
 logger.info(f"DataFrame 'reduced_product' was successfully saved as Parquet and CSV file")
-masked_part.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/m_part")
-masked_part.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/m_part.csv")
+masked_part.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\m_part")
+masked_part.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\m_part.csv")
 logger.info(f"DataFrame 'masked_part' was successfully saved as Parquet and CSV file")
 
 
 # Record script running time
 script_time = round(time.time() - star_time, 2)
-logger.info(f"'initial_data_extraction' script was successfully executed. Runnig time was {script_time} secs")
+logger.info(f"'initial_data_extraction' script was successfully executed. Running time was {script_time} secs")

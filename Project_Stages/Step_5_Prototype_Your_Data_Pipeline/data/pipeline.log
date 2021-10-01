@@ -160,3 +160,78 @@
 2021-08-26 21:12:14,673:INFO:data_extraction: DataFrame 'reduced_product' was successfully saved as parquet file
 2021-08-26 21:12:17,168:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
 2021-08-26 21:12:17,697:INFO:data_extraction: DataFrame 'reduced_qbclass' was successfully saved as parquet file
+2021-09-29 18:44:51,151:INFO:data_extraction: Table 'so' was successfully loaded. 15849 rows loaded.
+2021-09-29 18:44:52,501:INFO:data_extraction: Table 'soitem' was successfully loaded. 104952 rows loaded.
+2021-09-29 18:44:54,225:INFO:data_extraction: Table 'product' was successfully loaded. 8693 rows loaded.
+2021-09-29 18:44:54,820:INFO:data_extraction: Table 'part' was successfully loaded. 9054 rows loaded.
+2021-09-29 18:44:55,056:INFO:data_extraction: Table 'so' was successfully reduced to required fields: 9. Row count is 3589.
+2021-09-29 18:44:55,145:INFO:data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 104952.
+2021-09-29 18:44:55,203:INFO:data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8693.
+2021-09-29 18:44:55,257:INFO:data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9054.
+2021-09-29 18:44:56,719:INFO:data_extraction: DataFrame 'part' was successfully masked.
+2021-09-29 18:44:57,870:INFO:data_extraction: DataFrame 'reduced_so' was successfully saved as parquet file
+2021-09-29 18:44:59,166:INFO:data_extraction: DataFrame 'reduced_soitem' was successfully saved as parquet file
+2021-09-29 18:44:59,629:INFO:data_extraction: DataFrame 'reduced_product' was successfully saved as parquet file
+2021-09-29 18:45:01,112:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
+2021-09-29 18:57:04,974:CRITICAL:data_extraction: Unexpected error during 'rafa' table reading from database. Unexpected error: <class 'py4j.protocol.Py4JJavaError'>. Progam aborted.
+2021-09-29 18:59:27,427:CRITICAL:data_extraction: Unexpected error during 'rafa' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o35.load.\n', JavaObject id=o36), <traceback object at 0x00000240A28F69C0>). Progam aborted.
+2021-09-29 19:01:10,209:INFO:data_extraction: Table 'so' was successfully loaded. 15849 rows loaded.
+2021-09-29 19:01:10,386:INFO:data_extraction: Table 'soitem' was successfully loaded. 104952 rows loaded.
+2021-09-29 19:01:11,770:INFO:data_extraction: Table 'product' was successfully loaded. 8693 rows loaded.
+2021-09-29 19:01:11,899:INFO:data_extraction: Table 'part' was successfully loaded. 9054 rows loaded.
+2021-09-29 19:01:12,173:INFO:data_extraction: Table 'so' was successfully reduced to required fields: 9. Row count is 3589.
+2021-09-29 19:01:12,279:INFO:data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 104952.
+2021-09-29 19:01:12,393:INFO:data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8693.
+2021-09-29 19:01:12,474:INFO:data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9054.
+2021-09-29 19:01:13,990:INFO:data_extraction: DataFrame 'part' was successfully masked.
+2021-09-29 19:01:15,017:INFO:data_extraction: DataFrame 'reduced_so' was successfully saved as parquet file
+2021-09-29 19:01:16,196:INFO:data_extraction: DataFrame 'reduced_soitem' was successfully saved as parquet file
+2021-09-29 19:01:16,553:INFO:data_extraction: DataFrame 'reduced_product' was successfully saved as parquet file
+2021-09-29 19:01:18,116:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
+2021-09-29 19:04:48,774:INFO:data_extraction: Table 'so' was successfully loaded. 15849 rows loaded.
+2021-09-29 19:04:48,927:INFO:data_extraction: Table 'soitem' was successfully loaded. 104952 rows loaded.
+2021-09-29 19:04:50,225:INFO:data_extraction: Table 'product' was successfully loaded. 8693 rows loaded.
+2021-09-29 19:04:50,303:INFO:data_extraction: Table 'part' was successfully loaded. 9054 rows loaded.
+2021-09-29 19:04:50,568:INFO:data_extraction: Table 'so' was successfully reduced to required fields: 9. Row count is 3589.
+2021-09-29 19:04:50,677:INFO:data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 104952.
+2021-09-29 19:04:50,756:INFO:data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8693.
+2021-09-29 19:04:50,849:INFO:data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9054.
+2021-09-29 19:04:52,271:INFO:data_extraction: DataFrame 'part' was successfully masked.
+2021-09-29 19:04:53,177:INFO:data_extraction: DataFrame 'reduced_so' was successfully saved as parquet file
+2021-09-29 19:04:54,318:INFO:data_extraction: DataFrame 'reduced_soitem' was successfully saved as parquet file
+2021-09-29 19:04:54,709:INFO:data_extraction: DataFrame 'reduced_product' was successfully saved as parquet file
+2021-09-29 19:04:56,148:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
+2021-09-29 19:07:55,834:INFO:data_extraction: Table 'so' was successfully loaded. 15849 rows loaded.
+2021-09-29 19:07:55,974:INFO:data_extraction: Table 'soitem' was successfully loaded. 104952 rows loaded.
+2021-09-29 19:07:57,225:INFO:data_extraction: Table 'product' was successfully loaded. 8693 rows loaded.
+2021-09-29 19:07:57,302:INFO:data_extraction: Table 'part' was successfully loaded. 9054 rows loaded.
+2021-09-29 19:07:57,552:INFO:data_extraction: Table 'so' was successfully reduced to required fields: 9. Row count is 3589.
+2021-09-29 19:07:57,740:INFO:data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 104952.
+2021-09-29 19:07:57,818:INFO:data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8693.
+2021-09-29 19:07:57,912:INFO:data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9054.
+2021-09-29 19:07:59,271:INFO:data_extraction: DataFrame 'part' was successfully masked.
+2021-09-29 19:08:00,193:INFO:data_extraction: DataFrame 'reduced_so' was successfully saved as parquet file
+2021-09-29 19:08:01,374:INFO:data_extraction: DataFrame 'reduced_soitem' was successfully saved as parquet file
+2021-09-29 19:08:01,790:INFO:data_extraction: DataFrame 'reduced_product' was successfully saved as parquet file
+2021-09-29 19:08:03,240:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
+2021-09-29 19:08:03,476:CRITICAL:data_extraction: Unexpected error during 'nonexistent_table' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o163.load.\n', JavaObject id=o164), <traceback object at 0x000001EF2EA53140>). Progam aborted.
+2021-09-29 19:10:35,208:INFO:data_extraction: Table 'so' was successfully loaded. 15849 rows loaded.
+2021-09-29 19:10:35,363:INFO:data_extraction: Table 'soitem' was successfully loaded. 104952 rows loaded.
+2021-09-29 19:10:36,678:INFO:data_extraction: Table 'product' was successfully loaded. 8693 rows loaded.
+2021-09-29 19:10:36,853:INFO:data_extraction: Table 'part' was successfully loaded. 9054 rows loaded.
+2021-09-29 19:10:37,118:INFO:data_extraction: Table 'so' was successfully reduced to required fields: 9. Row count is 3589.
+2021-09-29 19:10:37,233:INFO:data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 104952.
+2021-09-29 19:10:37,409:INFO:data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8693.
+2021-09-29 19:10:37,502:INFO:data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9054.
+2021-09-29 19:10:38,983:INFO:data_extraction: DataFrame 'part' was successfully masked.
+2021-09-29 19:10:40,031:INFO:data_extraction: DataFrame 'reduced_so' was successfully saved as parquet file
+2021-09-29 19:10:41,205:INFO:data_extraction: DataFrame 'reduced_soitem' was successfully saved as parquet file
+2021-09-29 19:10:41,590:INFO:data_extraction: DataFrame 'reduced_product' was successfully saved as parquet file
+2021-09-29 19:10:43,161:INFO:data_extraction: DataFrame 'masked_part' was successfully saved as parquet file
+2021-09-29 19:10:43,408:CRITICAL:data_extraction: Unexpected error during 'nonexistent_table' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o163.load.\n', JavaObject id=o164), <traceback object at 0x0000016D465CFE80>). Progam aborted.
+2021-09-29 19:10:49,412:INFO:data_extraction: Table 'so' was successfully reduced to required fields: 9. Row count is 7.
+2021-09-29 19:11:00,943:CRITICAL:data_extraction: Table 'so' was not reduced to required fields. Program aborted.
+2021-09-29 19:11:06,551:INFO:data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 6.
+2021-09-29 19:11:17,968:CRITICAL:data_extraction: Table 'soitem' was not reduced to required fields. Program aborted.
+2021-09-29 19:11:40,816:INFO:data_extraction: DataFrame 'part' was successfully masked.
+2021-09-29 19:11:46,647:CRITICAL:data_extraction: DataFrame 'part' was not successfully masked. Program aborted.

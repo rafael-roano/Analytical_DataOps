@@ -1,12 +1,11 @@
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
-from pyspark.sql.types import StringType
 import logging
 import time
 import sys
 import datetime as dt
 
-sys.path.append("/usr/local/spark/resources/x/")
+sys.path.append("C:\\Users\\FBLServer\\Documents\\c\\")
 import config
 
 
@@ -43,7 +42,7 @@ logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 logger.addHandler(console_handler)
 
-file_handler = logging.FileHandler("/usr/local/spark/resources/pipeline.log")
+file_handler = logging.FileHandler("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\pipeline.log")
 logger.addHandler(file_handler)
 
 # Filter setup (based on the message level)
@@ -59,54 +58,77 @@ def table_to_dataframe (table):
     '''Read table from MySQL database and returns a DataFrame.
             
     Args:
-        table (str): Table's name.
+        table (str): Table's name
     
     Returns:
         DataFrame
     '''
+    try:
+
+        df = extraction_session.read.format("jdbc")\
+                        .option("url", url)\
+                        .option("driver", driver)\
+                        .option("dbtable", table)\
+                        .option("user", u)\
+                        .option("password", p).load()
     
-    dataframe = extraction_session.read.format("jdbc")\
-                    .option("url", url)\
-                    .option("driver", driver)\
-                    .option("dbtable", table)\
-                    .option("user", u)\
-                    .option("password", p).load()
-
-    return dataframe
-
-
-def loaded_df_check (df, table_name):
-    '''Confirm table was read successfully into DataFrame.
-            
-    Args:
-        df (dataframe): DataFrame to check.
-        table_name (str): Source table name.
-    '''
-    if df.rdd.isEmpty():
-        logger.error(f"Table '{table_name}' is empty.")
+    except:
+        logger.critical(f"Unexpected error during '{table}' table reading from database. Unexpected error: {sys.exc_info()}. Progam aborted.")
+        sys.exit()
+          
     else:
         rows = df.count()
-        logger.info(f"Table '{table_name}' was successfully loaded. {rows} rows loaded.")
+        logger.info(f"Table '{table}' was successfully loaded. {rows} rows loaded.")
+    
+    return df
 
 
-def schema_check (df, table_name, fields):
-    '''Confirm DataFrame was reduced successfully to required fields.
+def reduce_so_table (df, fields, field_count, yesterday):
+    '''Select only required fields and yesterday's date as'Date Created' range from 'so' table.
             
     Args:
-        df (dataframe): DataFrame to check.
-        table_name (str): Source table name.
-        fields (int): Field count.
+        df (dataframe): DataFrame to reduce
+        fields (list): Fields to keep from table
+        field_count (int): Field count to be reduced to
+        yesterday (str): Yesterday's date
     '''
 
-    if len(df.columns) == fields:
-        logger.info(f"Table '{table_name}' was successfully reduced to required fields.")
+    reduced_so = df.select(fields).filter(F.col("dateCreated").between(f"{yesterday} 00:00:00", f"{yesterday} 23:59:59"))
+   
+    if len(reduced_so.columns) == field_count:
+        rows = reduced_so.count()
+        logger.info(f"Table 'so' was successfully reduced to required fields: {field_count}. Transactions from {yesterday} were filtered. Row count is {rows}.")
+        return reduced_so
+    else:
+        logger.critical(f"Table 'so' was not reduced to required fields. Program aborted.")
+        sys.exit()
+
+
+
+def reduce_table (df, fields, field_count, table_name):
+    '''Select only required fields from table.
+            
+    Args:
+        df (dataframe): DataFrame to reduce
+        fields (list): Fields to keep from table
+        field_count (int): Field count to be reduced to
+        table_name (str): Source table name
+    '''
+   
+    reduced_df = df.select(fields)
+
+    if len(reduced_df.columns) == field_count:
+        rows = reduced_df.count()
+        logger.info(f"Table '{table_name}' was successfully reduced to required fields: {field_count}. Row count is {rows}.")
+        return reduced_df
     else:
         logger.critical(f"Table '{table_name}' was not reduced to required fields. Program aborted.")
         sys.exit()
 
 
 # Start SparkSession (entry point to Spark)
-extraction_session = SparkSession.builder.master("spark://spark:7077").appName("Daily_Data_Extraction").getOrCreate()
+# extraction_session = SparkSession.builder.master("spark://spark:7077").appName("Daily_Data_Extraction").getOrCreate()
+extraction_session = SparkSession.builder.master("local[*]").appName("Data_Extraction").getOrCreate()
 
 
 # MySQL database configuration values
@@ -118,31 +140,28 @@ p = config.db_p
 
 # Read MySQL tables into DataFrames
 so = table_to_dataframe("so")
-loaded_df_check (so, "so")
 soitem = table_to_dataframe("soitem")
-loaded_df_check (soitem, "soitem")
 
 
 # Extract daily transactions at order level. Reduce "so" table to required columns only.
 today_dt = dt.date.today()
 yesterday_dt = today_dt - dt.timedelta(days=1) 
 yesterday = yesterday_dt.strftime("%Y-%m-%d")
+so_req_fields = ["id", "num", "currencyId", "customerId", "dateCompleted", "dateCreated", "locationGroupId", "qbClassId", "statusId"]
+reduced_so = reduce_so_table(so, so_req_fields, 9, yesterday)
 
-reduced_so = so.select("id", "num", "currencyId", "customerId", "dateCompleted", "dateCreated", "locationGroupId", "qbClassId", "statusId")\
-                .filter(F.col("dateCreated").between(f"{yesterday} 00:00:00", f"{yesterday} 23:59:59"))
-schema_check(reduced_so, "so", 9)
 
-# Extract transactions at item level. Reduce "soitem" table to required columns only.
-reduced_soitem = soitem.select("id", "productId", "qtyOrdered", "soId", "typeId")
-schema_check(reduced_soitem, "soitem", 5)
+# Extract transactions at item level from "soitem" table and reduce it to required columns only.
+soitem_req_fields = ["id", "productId", "qtyOrdered", "soId", "typeId"]
+reduced_soitem = reduce_table(soitem, soitem_req_fields, 5, "soitem")
 
 
 # Save DataFrames (locally) into Parquet and CSV files
-reduced_so.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/daily_transactions/r_so")
-reduced_so.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/daily_transactions/r_so.csv")
+reduced_so.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\daily_transactions\\r_so")
+reduced_so.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\daily_transactions\\r_so.csv")
 logger.info(f"DataFrame 'reduced_so' was successfully saved as Parquet and CSV file")
-reduced_soitem.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/daily_transactions/r_soitem")
-reduced_soitem.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/daily_transactions/r_soitem.csv")
+reduced_soitem.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\daily_transactions\\r_soitem")
+reduced_soitem.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\daily_transactions\\r_soitem.csv")
 logger.info(f"DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file")
 
 
