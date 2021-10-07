@@ -5,7 +5,7 @@ import logging
 import time
 import sys
 
-sys.path.append("/usr/local/spark/resources/x/")
+sys.path.append("C:\\Users\\FBLServer\\Documents\\c\\")
 import config
 
 
@@ -42,7 +42,7 @@ logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 logger.addHandler(console_handler)
 
-file_handler = logging.FileHandler("/usr/local/spark/resources/pipeline.log")
+file_handler = logging.FileHandler("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\pipeline.log")
 logger.addHandler(file_handler)
 
 # Filter setup (based on the message level)
@@ -171,7 +171,8 @@ def check_masking (df, field_count):
 
 
 # Start SparkSession (entry point to Spark)
-extraction_session = SparkSession.builder.master("spark://spark:7077").appName('initial_data_extraction').getOrCreate()
+# extraction_session = SparkSession.builder.master("spark://spark:7077").appName("Initial_Data_Extraction").getOrCreate()
+extraction_session = SparkSession.builder.master("local[*]").appName("Data_Extraction").getOrCreate()
 
 
 # MySQL database configuration values
@@ -208,7 +209,7 @@ reduced_part = reduce_table(part, part_req_fields, part_field_count, "part")
 ## Mask part num column in reduced_part table based on dictionary with masking values. Mask by substitution.
 
 # CSV file from local machine loaded to DataFrame -> DataFrame collected into an array
-mask = extraction_session.read.option("header", True).csv("/usr/local/spark/resources/x/m.csv")
+mask = extraction_session.read.option("header", True).csv("C:\\Users\\FBLServer\\Documents\\c\\m.csv")
 mask_array = mask.collect()
 mask_dict = {}
 
@@ -224,17 +225,17 @@ check_masking(masked_part, part_field_count)
 
 
 # Save DataFrames (locally) into Parquet and CSV files
-reduced_so.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_so")
-reduced_so.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_so.csv")
+reduced_so.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_so")
+reduced_so.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_so.csv")
 logger.info(f"DataFrame 'reduced_so' was successfully saved as Parquet and CSV file")
-reduced_soitem.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_soitem")
-reduced_soitem.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_soitem.csv")
+reduced_soitem.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_soitem")
+reduced_soitem.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_soitem.csv")
 logger.info(f"DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file")
-reduced_product.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_product")
-reduced_product.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/r_product.csv")
+reduced_product.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_product")
+reduced_product.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\r_product.csv")
 logger.info(f"DataFrame 'reduced_product' was successfully saved as Parquet and CSV file")
-masked_part.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/m_part")
-masked_part.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/m_part.csv")
+masked_part.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\m_part")
+masked_part.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\m_part.csv")
 logger.info(f"DataFrame 'masked_part' was successfully saved as Parquet and CSV file")
 
 

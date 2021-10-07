@@ -3,9 +3,6 @@ from pyspark.sql import functions as F
 import logging
 import time
 
-import sys
-sys.path.append("/usr/local/spark/resources/x/")
-import config as c
 
 # Start timer to record script running time
 star_time = time.time()
@@ -33,14 +30,14 @@ class HandlerFilter():
         return log_record.levelno == self.__level
 
 # Logger setup (emit log records)
-logger = logging.getLogger("daily_data_cleaning")
+logger = logging.getLogger("daily_data_cleaning_aws")
 logger.setLevel(logging.INFO)
 
 # Handler setup (send the log records to the appropriate destination)
 console_handler = logging.StreamHandler()
 logger.addHandler(console_handler)
 
-file_handler = logging.FileHandler("/usr/local/spark/resources/pipeline.log")
+file_handler = logging.FileHandler("pipeline.log")
 logger.addHandler(file_handler)
 
 # Filter setup (based on the message level)
@@ -54,7 +51,7 @@ file_handler.setFormatter(formatter)
 
 def read_daily_parquet(file):
 
-    df = cleaning_session.read.parquet(f"/usr/local/spark/resources/output/Extracted_MySQL_Tables/daily_transactions/{file}")
+    df = cleaning_session.read.parquet(f"s3a://aaa-raw-data/Extracted_MySQL_Tables/daily_transactions/{file}")
     rows = df.count()
     logger.info(f"Parquet file '{file}' was successfully loaded into DataFrame. {rows} rows loaded")
 
@@ -63,7 +60,7 @@ def read_daily_parquet(file):
 
 def read_parquet(file):
 
-    df = cleaning_session.read.parquet(f"/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/{file}")
+    df = cleaning_session.read.parquet(f"s3a://aaa-raw-data/Extracted_MySQL_Tables/initial_extraction/{file}")
     rows = df.count()
     logger.info(f"Parquet file '{file}' was successfully loaded into DataFrame. {rows} rows loaded")
 
@@ -110,22 +107,22 @@ def categorize_transactions(df_name, df):
             F.when((df.num.like("%#SS%")) | (df.num.like("%#CS%")) | (df.num.like("%#MS%"))\
                 | (df.num.like("%Samples%")) | (df.num.like("%SAMPLES%")) | (df.num.like("%samples%")), "Samples")
             .when(df.num.like("%RMA%"), "RMA")
-            .when(df.customerId == c.id_15, "C")
-            .when(df.customerId == c.id_14, "G")
-            .when(df.customerId == c.id_13, "H")
-            .when(df.customerId == c.id_12, "J")
-            .when(df.customerId == c.id_11, "N")
-            .when(df.customerId == c.id_10, "A")
-            .when(df.customerId == c.id_9, "B")
-            .when(df.customerId == c.id_8, "E")
-            .when(df.customerId == c.id_7, "F")
-            .when(df.customerId == c.id_6, "I")
-            .when(df.customerId == c.id_5, "M")
-            .when(df.customerId == c.id_4, "Q")
-            .when(df.customerId == c.id_3, "R")
-            .when((df.customerId == c.id_2) | (df.customerId == c.id_1), "Closed Channel")
-            .when((df.qbClassId == 19) & (df.customerId != c.id_15) & (df.customerId != c.id_11), "K")
-            .when((df.qbClassId == 9) & (df.customerId != c.id_7) & (df.customerId != c.id_5) & (df.customerId != c.id_12), "O")
+            .when(df.customerId == 3738, "C")
+            .when(df.customerId == 1731, "G")
+            .when(df.customerId == 1, "H")
+            .when(df.customerId == 6342, "J")
+            .when(df.customerId == 3806, "N")
+            .when(df.customerId == 4854, "A")
+            .when(df.customerId == 3995, "B")
+            .when(df.customerId == 426, "E")
+            .when(df.customerId == 312, "F")
+            .when(df.customerId == 2839, "I")
+            .when(df.customerId == 3809, "M")
+            .when(df.customerId == 6343, "Q")
+            .when(df.customerId == 3188, "R")
+            .when((df.customerId == 3852) | (df.customerId == 1159), "Closed Channel")
+            .when((df.qbClassId == 19) & (df.customerId != 3738) & (df.customerId != 3806), "K")
+            .when((df.qbClassId == 9) & (df.customerId != 312) & (df.customerId != 3809) & (df.customerId != 6342), "O")
             .when((df.qbClassId == 12) | (df.qbClassId == 17), "P")                                     
             .otherwise("Uncategorized").alias("sales_channel"))
     
@@ -263,7 +260,7 @@ def create_fact_sales(soitem, so, product, part):
 
 
 # Start SparkSession (entry point to Spark)
-cleaning_session = SparkSession.builder.master("spark://spark:7077").appName('daily_data_cleaning').getOrCreate()
+cleaning_session = SparkSession.builder.appName('daily_data_cleaning_aws').getOrCreate()
 
 
 # Read Parquet files into DataFrames
@@ -287,7 +284,7 @@ so = categorize_transactions("so", so)
 # Save transactions not required (Samples, RMA, Closed Channel, Uncategorized) in CSV file as backup
 categories_not_req = ["Samples", "RMA", "Closed Channel", "Uncategorized"]
 not_required_trans = retrieve_not_req_trans(so, categories_not_req)
-not_required_trans.write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/daily_transactions/transactions_not_loaded.csv")
+not_required_trans.write.mode('overwrite').csv("s3a://aaa-raw-data/Extracted_MySQL_Tables/daily_transactions/transactions_not_loaded.csv")
 logger.info(f"DataFrame 'not_required' was saved as CSV file")
 
 # Remove transactions not required from "so" DataFrame (Samples, RMA, Closed Channel, Uncategorized)
@@ -307,10 +304,10 @@ soitem = round_qty_ordered("soitem", soitem)
 
 # Create and save 'Fact_Sales' table as Parquet file
 Fact_Sales = create_fact_sales(soitem, so, product, part)
-Fact_Sales.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Star_Schema_Tables/Fact_Sales")
+Fact_Sales.write.mode('overwrite').parquet("s3a://aaa-raw-data/Star_Schema_Tables/Fact_Sales")
 logger.info(f"Table 'Fact_Sales' was successfully saved as Parquet file")
 
 
 # Record script running time
 script_time = round(time.time() - star_time, 2)
-logger.info(f"'daily_data_cleaning' script was successfully executed. Runnig time was {script_time} secs")
+logger.info(f"'daily_data_cleaning_aws' script was successfully executed. Runnig time was {script_time} secs")

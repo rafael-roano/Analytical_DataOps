@@ -6,7 +6,7 @@ import time
 import json
 
 import sys
-sys.path.append("C:\\Users\\FBLServer\\Documents\\c\\")
+sys.path.append("/usr/local/spark/resources/x/")
 import config as c
 
 # Start timer to record script running time
@@ -42,7 +42,7 @@ logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 logger.addHandler(console_handler)
 
-file_handler = logging.FileHandler("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\pipeline.log")
+file_handler = logging.FileHandler("/usr/local/spark/resources/pipeline.log")
 logger.addHandler(file_handler)
 
 # Filter setup (based on the message level)
@@ -56,7 +56,7 @@ file_handler.setFormatter(formatter)
 
 def read_parquet(file):
 
-    df = cleaning_session.read.parquet(f"C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\initial_extraction\\{file}")
+    df = cleaning_session.read.parquet(f"/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/{file}")
     rows = df.count()
     logger.info(f"Parquet file '{file}' was successfully loaded into DataFrame. {rows} rows loaded")
 
@@ -319,8 +319,7 @@ def create_dim_products(part):
 
 
 # Start SparkSession (entry point to Spark)
-# cleaning_session = SparkSession.builder.master("spark://spark:7077").appName('Initial_Data_Cleaning').getOrCreate()
-cleaning_session = SparkSession.builder.master("local[*]").appName('Data_Cleaning').getOrCreate()
+cleaning_session = SparkSession.builder.master("spark://spark:7077").appName('initial_data_cleaning').getOrCreate()
 
 
 # Read Parquet files into DataFrames
@@ -343,7 +342,7 @@ so = categorize_transactions("so", so)
 # Save transactions not required (Samples, RMA, Closed Channel, Uncategorized) in CSV file as backup
 categories_not_req = ["Samples", "RMA", "Closed Channel", "Uncategorized"]
 not_required_trans = retrieve_not_req_trans(so, categories_not_req)
-not_required_trans.write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\initial_extraction\\transactions_not_loaded.csv")
+not_required_trans.write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/initial_extraction/transactions_not_loaded.csv")
 logger.info(f"DataFrame 'not_required' was saved as CSV file")
 
 # Remove transactions not required from "so" DataFrame (Samples, RMA, Closed Channel, Uncategorized)
@@ -374,13 +373,13 @@ part = calculate_part_volume(part)
 
 # Create and save 'Fact_Sales' table as Parquet file
 Fact_Sales = create_fact_sales(soitem, so, product, part)
-Fact_Sales.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Star_Schema_Tables\\Fact_Sales")
+Fact_Sales.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Star_Schema_Tables/Fact_Sales")
 logger.info(f"Table 'Fact_Sales' was successfully saved as Parquet file")
 
 
 # Create and save 'Dim_Products' table as Parquet file
 Dim_Products = create_dim_products(part)
-Dim_Products.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Star_Schema_Tables\\Dim_Products")
+Dim_Products.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Star_Schema_Tables/Dim_Products")
 logger.info(f"Table 'Dim_Products' was successfully saved as Parquet file")
 
 
@@ -393,9 +392,9 @@ sales_cat_schema = StructType([
     
 ])
 
-Dim_Sales_Channels = cleaning_session.read.option("header", True).schema(sales_cat_schema).csv("C:\\Users\\FBLServer\\Documents\\c\\sales_cat.csv")
+Dim_Sales_Channels = cleaning_session.read.option("header", True).schema(sales_cat_schema).csv("/usr/local/spark/resources/x/sales_cat.csv")
 Dim_Sales_Channels.printSchema()
-Dim_Sales_Channels.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Star_Schema_Tables\\Dim_Sales_Channels")
+Dim_Sales_Channels.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Star_Schema_Tables/Dim_Sales_Channels")
 logger.info(f"Table 'Dim_Sales_Channels' was successfully saved as Parquet file")
 
 
@@ -407,10 +406,10 @@ date_schema = StructType([
     StructField("day", IntegerType(), False),    
 ])
 
-Dim_Dates = cleaning_session.read.option("header", True).schema(date_schema).csv("C:\\Users\\FBLServer\\Documents\\c\\date.csv")
-Dim_Dates.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Star_Schema_Tables\\Dim_Dates")
+Dim_Dates = cleaning_session.read.option("header", True).schema(date_schema).csv("/usr/local/spark/resources/x/date.csv")
+Dim_Dates.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Star_Schema_Tables/Dim_Dates")
 logger.info(f"Table 'Dim_Dates' was successfully saved as Parquet file")
 
 # Record script running time
 script_time = round(time.time() - star_time, 2)
-logger.info(f"'initial_data_cleaning_spark' script was successfully executed. Runnig time was {script_time} secs")
+logger.info(f"'initial_data_cleaning' script was successfully executed. Runnig time was {script_time} secs")

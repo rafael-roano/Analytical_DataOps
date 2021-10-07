@@ -35,7 +35,7 @@ class HandlerFilter():
         return log_record.levelno == self.__level
 
 # Logger setup (emit log records)
-logger = logging.getLogger("intial_data_extraction")
+logger = logging.getLogger("initial_data_extraction_aws")
 logger.setLevel(logging.INFO)
 
 # Handler setup (send the log records to the appropriate destination)
@@ -171,7 +171,17 @@ def check_masking (df, field_count):
 
 
 # Start SparkSession (entry point to Spark)
-extraction_session = SparkSession.builder.master("spark://spark:7077").appName('initial_data_extraction').getOrCreate()
+extraction_session = SparkSession.builder.master("spark://spark:7077").appName('initial_data_extraction_aws').getOrCreate()
+sc = extraction_session.sparkContext
+
+# Hadoop Configuration
+hadoop_conf = sc._jsc.hadoopConfiguration()
+access_key = config.a_k
+secret_key = config.s_k
+endpoint = "https://s3.us-west-1.amazonaws.com"
+hadoop_conf.set("fs.s3a.access.key", access_key)
+hadoop_conf.set("fs.s3a.secret.key", secret_key)
+hadoop_conf.set("fs.s3a.endpoint", endpoint)
 
 
 # MySQL database configuration values
@@ -238,6 +248,17 @@ masked_part.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/
 logger.info(f"DataFrame 'masked_part' was successfully saved as Parquet and CSV file")
 
 
+# Write Parquet files into S3 bucket
+reduced_so.write.mode('overwrite').parquet("s3a://aaa-raw-data/Extracted_MySQL_Tables/initial_extraction/r_so")
+logger.info(f"DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket")
+reduced_soitem.write.mode('overwrite').parquet("s3a://aaa-raw-data/Extracted_MySQL_Tables/initial_extraction/r_soitem")
+logger.info(f"DataFrame 'reduced_soitem' was successfully saved as Parquet file on S3 bucket")
+reduced_product.write.mode('overwrite').parquet("s3a://aaa-raw-data/Extracted_MySQL_Tables/initial_extraction/r_product")
+logger.info(f"DataFrame 'reduced_product' was successfully saved as Parquet file on S3 bucket")
+masked_part.write.mode('overwrite').parquet("s3a://aaa-raw-data/Extracted_MySQL_Tables/initial_extraction/m_part")
+logger.info(f"DataFrame 'masked_part' was successfully saved as Parquet file on S3 bucket")
+
+
 # Record script running time
 script_time = round(time.time() - star_time, 2)
-logger.info(f"'initial_data_extraction' script was successfully executed. Running time was {script_time} secs")
+logger.info(f"'initial_data_extraction_aws' script was successfully executed. Running time was {script_time} secs")

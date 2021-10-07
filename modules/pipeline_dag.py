@@ -27,7 +27,7 @@ default_args = {
 now = datetime.now()
 
 with DAG("pipeline_dag",
-        start_date=datetime(2021, 9, 11),
+        start_date=datetime(2021, 10, 2),
         schedule_interval = "0 8 * * *",   # Run daily at 08:00 AM (UTC); equivlent to 01:00 AM (PDT)
         default_args=default_args,
         description = "Daily ETL of sales transactions", 
@@ -55,11 +55,11 @@ with DAG("pipeline_dag",
                             application_args=[file_path])
 
 
-    # SparkSubmitOperator to submit daily_data_uploading.py
+    # SparkSubmitOperator to submit daily_data_upload.py
     
     S3_data_upload = SparkSubmitOperator(
                             task_id="S3_data_upload",
-                            application="/usr/local/spark/app/daily_data_uploading.py",
+                            application="/usr/local/spark/app/daily_data_upload.py",
                             conn_id="spark_default",
                             verbose=1,
                             jars="/usr/local/spark/resources/jars/hadoop-aws-2.7.3.jar,/usr/local/spark/resources/jars/aws-java-sdk-1.7.4.jar",

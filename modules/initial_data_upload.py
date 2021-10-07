@@ -54,7 +54,7 @@ file_handler.setFormatter(formatter)
 
 # Start SparkSession (entry point to Spark)
 
-uploading_session = SparkSession.builder.master("spark://spark:7077").appName('Initial_Data_Upload').getOrCreate()
+uploading_session = SparkSession.builder.master("spark://spark:7077").appName('initial_data_upload').getOrCreate()
 sc = uploading_session.sparkContext
 
 # Hadoop Configuration
@@ -93,4 +93,4 @@ logger.info(f"Parquet file 'Dim_Dates' was successfully loaded into DataFrame an
 
 # Record script running time
 script_time = round(time.time() - star_time, 2)
-logger.info(f"'initial_data_upload_spark' script was successfully executed. Runnig time was {script_time} secs")
+logger.info(f"'initial_data_upload' script was successfully executed. Runnig time was {script_time} secs")

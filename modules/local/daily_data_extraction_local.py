@@ -5,7 +5,7 @@ import time
 import sys
 import datetime as dt
 
-sys.path.append("/usr/local/spark/resources/x/")
+sys.path.append("C:\\Users\\FBLServer\\Documents\\c\\")
 import config
 
 
@@ -42,7 +42,7 @@ logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 logger.addHandler(console_handler)
 
-file_handler = logging.FileHandler("/usr/local/spark/resources/pipeline.log")
+file_handler = logging.FileHandler("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\pipeline.log")
 logger.addHandler(file_handler)
 
 # Filter setup (based on the message level)
@@ -127,7 +127,8 @@ def reduce_table (df, fields, field_count, table_name):
 
 
 # Start SparkSession (entry point to Spark)
-extraction_session = SparkSession.builder.master("spark://spark:7077").appName('daily_data_extraction').getOrCreate()
+# extraction_session = SparkSession.builder.master("spark://spark:7077").appName("Daily_Data_Extraction").getOrCreate()
+extraction_session = SparkSession.builder.master("local[*]").appName("Data_Extraction").getOrCreate()
 
 
 # MySQL database configuration values
@@ -156,12 +157,14 @@ reduced_soitem = reduce_table(soitem, soitem_req_fields, 5, "soitem")
 
 
 # Save DataFrames (locally) into Parquet and CSV files
-reduced_so.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/daily_transactions/r_so")
-reduced_so.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/daily_transactions/r_so.csv")
+reduced_so.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\daily_transactions\\r_so")
+reduced_so.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\daily_transactions\\r_so.csv")
 logger.info(f"DataFrame 'reduced_so' was successfully saved as Parquet and CSV file")
-reduced_soitem.write.mode('overwrite').parquet("/usr/local/spark/resources/output/Extracted_MySQL_Tables/daily_transactions/r_soitem")
-reduced_soitem.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resources/output/Extracted_MySQL_Tables/daily_transactions/r_soitem.csv")
+reduced_soitem.write.mode('overwrite').parquet("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\daily_transactions\\r_soitem")
+reduced_soitem.coalesce(1).write.mode('overwrite').csv("C:\\Users\\FBLServer\\Documents\\test\\usr\\local\\spark\\resources\\output\\Extracted_MySQL_Tables\\daily_transactions\\r_soitem.csv")
 logger.info(f"DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file")
+
+reduced_so.show(reduced_so.count())
 
 
 # Record script running time

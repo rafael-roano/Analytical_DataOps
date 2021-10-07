@@ -35,7 +35,7 @@ class HandlerFilter():
         return log_record.levelno == self.__level
 
 # Logger setup (emit log records)
-logger = logging.getLogger("daily_data_extraction")
+logger = logging.getLogger("daily_data_extraction_aws")
 logger.setLevel(logging.INFO)
 
 # Handler setup (send the log records to the appropriate destination)
@@ -127,7 +127,17 @@ def reduce_table (df, fields, field_count, table_name):
 
 
 # Start SparkSession (entry point to Spark)
-extraction_session = SparkSession.builder.master("spark://spark:7077").appName('daily_data_extraction').getOrCreate()
+extraction_session = SparkSession.builder.master("spark://spark:7077").appName('daily_data_extraction_aws').getOrCreate()
+sc = extraction_session.sparkContext
+
+# Hadoop Configuration
+hadoop_conf = sc._jsc.hadoopConfiguration()
+access_key = config.a_k
+secret_key = config.s_k
+endpoint = "https://s3.us-west-1.amazonaws.com"
+hadoop_conf.set("fs.s3a.access.key", access_key)
+hadoop_conf.set("fs.s3a.secret.key", secret_key)
+hadoop_conf.set("fs.s3a.endpoint", endpoint)
 
 
 # MySQL database configuration values
@@ -164,6 +174,14 @@ reduced_soitem.coalesce(1).write.mode('overwrite').csv("/usr/local/spark/resourc
 logger.info(f"DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file")
 
 
+# Write Parquet files into S3 bucket
+reduced_so.write.mode('overwrite').parquet("s3a://aaa-raw-data/Extracted_MySQL_Tables/daily_transactions/r_so")
+logger.info(f"DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket")
+reduced_soitem.write.mode('overwrite').parquet("s3a://aaa-raw-data/Extracted_MySQL_Tables/daily_transactions/r_soitem")
+logger.info(f"DataFrame 'reduced_soitem' was successfully saved as Parquet file on S3 bucket")
+
+
+
 # Record script running time
 script_time = round(time.time() - star_time, 2)
-logger.info(f"'daily_data_extraction' script was successfully executed. Runnig time was {script_time} secs")
+logger.info(f"'daily_data_extraction_aws' script was successfully executed. Runnig time was {script_time} secs")

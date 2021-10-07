@@ -5,12 +5,60 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.providers.snowflake.transfers.s3_to_snowflake import S3ToSnowflakeOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.providers.amazon.aws.operators.emr_add_steps import EmrAddStepsOperator
+from airflow.providers.amazon.aws.sensors.emr_step import EmrStepSensor
 
 from datetime import datetime, timedelta
+
 
 # Paramaters
 
 file_path = "/usr/local/spark/resources/data/airflow.cfg"
+
+emr_cluster_id = "j-2TMS444F8O9UA"
+
+SPARK_STEPS = [
+#     {
+#         "Name": "Move initial_data_cleaning_aws.py from S3 to HDFS",
+#         "ActionOnFailure": "CANCEL_AND_WAIT",
+#         "HadoopJarStep": {
+#             "Jar": "command-runner.jar",
+#             "Args": [
+#                 "s3-dist-cp",
+#                 "--src=s3a://aaa-raw-data/resources/x/initial_data_cleaning_aws.py", 
+#                 "--dest=/resources",
+#             ],
+#         },
+#     },
+
+    # {
+    #     "Name": "Move pipeline.log from S3 to HDFS",
+    #     "ActionOnFailure": "CANCEL_AND_WAIT",
+    #     "HadoopJarStep": {
+    #         "Jar": "command-runner.jar",
+    #         "Args": [
+    #             "s3-dist-cp",
+    #             "--src=s3://aaa-raw-data/logs/pipeline.log",
+    #             "--dest=s3://aaa-raw-data/",
+    #         ],
+    #     },
+    # }, 
+
+    {
+        "Name": "Run initial_data_cleaning_aws.py spark job",
+        "ActionOnFailure": "CANCEL_AND_WAIT",
+        "HadoopJarStep": {
+            "Jar": "command-runner.jar",
+            "Args": [
+                "spark-submit",
+                "--deploy-mode",
+                "client",
+                "s3a://aaa-raw-data/resources/x/initial_data_cleaning_aws.py",
+            ],
+        },
+    },
+   
+]
 
 # Create Airflow DAG:
 
@@ -26,11 +74,11 @@ default_args = {
 
 now = datetime.now()
 
-with DAG("initial_etl_dag",
+with DAG("initial_etl_dag_aws",
         start_date=datetime(now.year, now.month, now.day),
         schedule_interval = None,   # To trigger manually
         default_args=default_args,
-        description = "Initial ETL of sales transactions", 
+        description = "Initial ETL of sales transactions (aws)", 
         catchup=False
         ) as dag:
 
@@ -38,31 +86,50 @@ with DAG("initial_etl_dag",
 
     # Spark Operator to submit initial_data_extraction.py
     mysql_data_extraction = SparkSubmitOperator(
-                            task_id="mysql_data_extraction",
-                            application="/usr/local/spark/app/initial_data_extraction.py",
+                            task_id="initial_data_extraction",
+                            application="/usr/local/spark/app/initial_data_extraction_aws.py",
                             conn_id="spark_default",
                             verbose=1,
-                            jars="/usr/local/spark/resources/jars/mysql-connector-java-8.0.25.jar",
+                            jars="/usr/local/spark/resources/jars/mysql-connector-java-8.0.25.jar,/usr/local/spark/resources/jars/hadoop-aws-2.7.3.jar,/usr/local/spark/resources/jars/aws-java-sdk-1.7.4.jar",
                             application_args=[file_path])
+                            
     
+    # EmrAddSteps Operator to add steps to EMR cluster
+    cluster_steps_addition = EmrAddStepsOperator(
+        task_id="cluster_steps_addition",
+        job_flow_id=emr_cluster_id,
+        aws_conn_id="s3",
+        steps=SPARK_STEPS)
+    
+    
+    # Wait for the steps to complete
+    last_step = len(SPARK_STEPS) - 1 # this value will let the sensor know the last step to watch
+    step_check = EmrStepSensor(
+        task_id="step_check",
+        job_flow_id=emr_cluster_id,
+        step_id="{{ task_instance.xcom_pull(task_ids='cluster_steps_addition', key='return_value')["
+        + str(last_step)
+        + "] }}",
+        aws_conn_id="s3")
 
-    # Spark Operator to submit initial_data_cleaning.py
-    data_transformation = SparkSubmitOperator(
-                            task_id="data_transformation",
-                            application="/usr/local/spark/app/initial_data_cleaning.py",
-                            conn_id="spark_default",
-                            verbose=1,
-                            application_args=[file_path])
+
+    #     # Spark Operator to submit initial_data_cleaning.py
+    #     data_transformation = SparkSubmitOperator(
+    #                             task_id="data_transformation",
+    #                             application="/usr/local/spark/app/initial_data_cleaning.py",
+    #                             conn_id="spark_default",
+    #                             verbose=1,
+    #                             application_args=[file_path])
 
 
-    # SparkSubmitOperator to submit initial_data_upload.py
-    S3_data_upload = SparkSubmitOperator(
-                            task_id="S3_data_upload",
-                            application="/usr/local/spark/app/initial_data_upload.py",
-                            conn_id="spark_default",
-                            verbose=1,
-                            jars="/usr/local/spark/resources/jars/hadoop-aws-2.7.3.jar,/usr/local/spark/resources/jars/aws-java-sdk-1.7.4.jar",
-                            application_args=[file_path])
+    #     # SparkSubmitOperator to submit initial_data_upload.py
+    #     S3_data_upload = SparkSubmitOperator(
+    #                             task_id="S3_data_upload",
+    #                             application="/usr/local/spark/app/initial_data_upload.py",
+    #                             conn_id="spark_default",
+    #                             verbose=1,
+    #                             jars="/usr/local/spark/resources/jars/hadoop-aws-2.7.3.jar,/usr/local/spark/resources/jars/aws-java-sdk-1.7.4.jar",
+    #                             application_args=[file_path])
 
  
     # PythonOperator to get S3 file path to initial transfomed data
@@ -161,8 +228,10 @@ with DAG("initial_etl_dag",
 
     # Job Dependencies
 
-    start >> mysql_data_extraction >> data_transformation >> S3_data_upload >> get_S3_file_paths >> fact_sales_snowflake_transfer >> end
-    start >> mysql_data_extraction >> data_transformation >> S3_data_upload >> get_S3_file_paths >> dim_prod_snowflake_transfer >> end
-    start >> mysql_data_extraction >> data_transformation >> S3_data_upload >> get_S3_file_paths >> dim_chan_snowflake_transfer >> end
-    start >> mysql_data_extraction >> data_transformation >> S3_data_upload >> get_S3_file_paths >> dim_dates_snowflake_transfer >> end
+    start >> mysql_data_extraction >> cluster_steps_addition >> step_check >> get_S3_file_paths >> fact_sales_snowflake_transfer >> end
+    start >> mysql_data_extraction >> cluster_steps_addition >> step_check >> get_S3_file_paths >> dim_prod_snowflake_transfer >> end
+    start >> mysql_data_extraction >> cluster_steps_addition >> step_check >> get_S3_file_paths >> dim_chan_snowflake_transfer >> end
+    start >> mysql_data_extraction >> cluster_steps_addition >> step_check >> get_S3_file_paths >> dim_dates_snowflake_transfer >> end
+
+  
     
