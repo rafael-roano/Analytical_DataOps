@@ -19,9 +19,9 @@ The project includes two versions:
 <!-- ARCHITECTURE DIAGRAMS -->
 ## Architecture Diagrams and Technologies
 
-![Local Architecture](.spark/resources/images/architecture_diagram_local.png)
+![Local Architecture](./spark/resources/images/architecture_diagram_local.png)
 
-![Distributed Architecture](.spark/resources/images/architecture_diagram_distributed.png)
+![Distributed Architecture](./spark/resources/images/architecture_diagram_distributed.png)
 
 * Apache Airflow: Open-source workflow management platform, used to orchestrate and schedule pipeline tasks. Airflow was selected for this project for having plenty of operators and plugins right out of the box and for its robust workflow monitoring capability. It has a large community as well.
 
@@ -42,11 +42,11 @@ The project includes two versions:
 
 ### Source Schema (OLTP)
 
-![Source Schema](.spark/resources/images/transactional_tables_schema.png)
+![Source Schema](./spark/resources/images/transactional_tables_schema.png)
 
 ### Star Schema (OLAP)
 
-![Source Schema](.spark/resources/images/star_schema.png)
+![Source Schema](./spark/resources/images/star_schema.png)
 
 <!-- DAGS -->
 ## DAGS
@@ -55,19 +55,19 @@ Airflow DAGS included are:
 
 * initial_etl_dag.py: Runs the ETL steps required to populate our model at the time of setup.
 
-![Initial ETL DAG](.spark/resources/images/initial_etl_dag.png)
+![Initial ETL DAG](./spark/resources/images/initial_etl_dag.png)
 
 * pipeline_dag.py: Runs the ETL steps required to add the incremental data to our model on a daily basis.
 
-![Pipeline DAG](.spark/resources/images/pipeline_dag.png)
+![Pipeline DAG](./spark/resources/images/pipeline_dag.png)
 
 * initial_etl_dag_aws.py: Runs the ETL steps required to populate our model at the time of setup for the cluster mode.
 
-![Initial ETL DAG AWS](.spark/resources/images/initial_etl_dag_aws.png)
+![Initial ETL DAG AWS](./spark/resources/images/initial_etl_dag_aws.png)
 
 * pipeline_dag_aws.py: Runs the ETL steps required to add the incremental data to our model on a daily basis for the cluster mode.
 
-![Pipeline DAG AWS](.spark/resources/images/pipeline_dag_aws.png)
+![Pipeline DAG AWS](./spark/resources/images/pipeline_dag_aws.png)
 
 <!-- PIPELINE STEPS -->
 ## Pipeline Steps
@@ -163,7 +163,7 @@ In order to use the Distributed Processing version, the following modules and Ai
   * cluster_steps_addition operator: EMR Add Steps Operator to the add spark-submit command as a step to the cluster, which submits the initial_data_cleaning_aws.py and daily_data_cleaning_aws.py modules to the cluster.
   * step_check sensor: EMR Step Sensor to wait to the step to complete before proceeding with the next DAG tasks.
 
-All **final modules** can be found in ./spark/app.
+**All final modules are found in ./spark/app.**
 
 ## Authors
 
