@@ -1,0 +1,703 @@
+2021-10-02 08:19:07,569:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15865 rows loaded.
+2021-10-02 08:19:07,883:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105021 rows loaded.
+2021-10-02 08:19:08,128:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8700 rows loaded.
+2021-10-02 08:19:08,275:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9067 rows loaded.
+2021-10-02 08:19:08,644:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-02 08:19:08,786:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105021.
+2021-10-02 08:19:09,001:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8700.
+2021-10-02 08:19:09,233:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9067.
+2021-10-02 08:19:11,160:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-02 08:19:12,971:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-02 08:19:14,078:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-02 08:19:14,386:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-02 08:19:15,127:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-02 08:19:15,127:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 15.23 secs
+2021-10-02 08:19:26,037:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-02 08:19:26,407:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 08:19:26,676:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 08:19:26,904:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 08:19:27,575:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-02 08:22:54,230:CRITICAL:intial_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7fb40ba66908>). Progam aborted.
+2021-10-02 08:23:05,953:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-02 08:23:06,365:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 08:23:06,664:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 08:23:06,876:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 08:23:07,802:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-02 08:23:08,062:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-02 08:23:08,441:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-02 08:23:09,130:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 08:23:09,477:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-02 08:23:09,665:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 08:23:09,851:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 08:23:10,120:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-02 08:23:10,721:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-02 08:23:11,233:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-02 08:23:11,700:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-02 08:23:12,254:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-02 08:23:13,253:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 08:23:13,416:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-02 08:23:15,261:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-02 08:23:15,594:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-02 08:23:15,775:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-02 08:23:15,776:INFO:initial_data_cleaning: 'initial_data_cleaning_spark' script was successfully executed. Runnig time was 18.06 secs
+2021-10-02 08:23:35,220:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-02 08:23:42,199:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-02 08:23:47,631:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-02 08:23:53,003:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-02 08:23:53,003:INFO:initial_data_upload: 'initial_data_upload_spark' script was successfully executed. Runnig time was 33.61 secs
+2021-10-02 08:34:29,739:CRITICAL:intial_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7f9dae88d908>). Progam aborted.
+2021-10-02 08:34:39,250:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-02 08:34:39,534:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 08:34:39,826:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 08:34:40,175:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 08:34:40,981:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-02 08:34:41,398:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-02 08:34:41,880:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-02 08:34:42,607:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 08:34:42,864:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-02 08:34:43,012:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 08:34:43,202:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 08:34:43,493:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-02 08:34:43,996:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-02 08:34:44,506:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-02 08:34:45,239:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-02 08:34:45,729:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-02 08:34:47,373:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 08:34:47,522:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-02 08:34:50,176:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-02 08:34:50,422:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-02 08:34:50,701:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-02 08:34:50,701:INFO:initial_data_cleaning: 'initial_data_cleaning_spark' script was successfully executed. Runnig time was 17.67 secs
+2021-10-02 08:35:09,097:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-02 08:35:14,859:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-02 08:35:20,686:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-02 08:35:26,221:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-02 08:35:26,222:INFO:initial_data_upload: 'initial_data_upload_spark' script was successfully executed. Runnig time was 32.23 secs
+2021-10-02 17:17:48,542:CRITICAL:intial_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7f281456d908>). Progam aborted.
+2021-10-02 17:17:58,692:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-02 17:17:59,045:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 17:17:59,265:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 17:17:59,499:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 17:18:00,197:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-02 17:18:00,572:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-02 17:18:00,922:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-02 17:18:01,614:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 17:18:01,823:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-02 17:18:02,011:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 17:18:02,152:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 17:18:02,454:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-02 17:18:03,052:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-02 17:18:03,463:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-02 17:18:04,093:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-02 17:18:04,433:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-02 17:18:06,015:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 17:18:06,133:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-02 17:18:07,906:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-02 17:18:08,111:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-02 17:18:08,340:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-02 17:18:08,340:INFO:initial_data_cleaning: 'initial_data_cleaning_spark' script was successfully executed. Runnig time was 16.47 secs
+2021-10-02 17:18:28,076:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-02 17:18:33,735:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-02 17:18:39,293:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-02 17:18:44,601:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-02 17:18:44,602:INFO:initial_data_upload: 'initial_data_upload_spark' script was successfully executed. Runnig time was 33.22 secs
+2021-10-02 17:25:11,535:CRITICAL:intial_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7f397bb2f908>). Progam aborted.
+2021-10-02 17:25:21,823:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-02 17:25:22,116:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 17:25:22,348:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 17:25:22,571:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 17:25:23,314:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-02 17:25:23,683:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-02 17:25:24,213:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-02 17:25:25,098:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 17:25:25,772:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-02 17:25:26,105:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 17:25:26,402:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 17:25:26,652:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-02 17:25:27,412:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-02 17:25:28,179:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-02 17:25:29,014:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-02 17:25:29,651:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-02 17:25:30,878:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 17:25:31,048:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-02 17:25:32,862:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-02 17:25:33,055:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-02 17:25:33,324:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-02 17:25:33,324:INFO:initial_data_cleaning: 'initial_data_cleaning_spark' script was successfully executed. Runnig time was 18.46 secs
+2021-10-02 17:25:53,695:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-02 17:26:01,593:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-02 17:26:07,460:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-02 17:26:13,274:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-02 17:26:13,274:INFO:initial_data_upload: 'initial_data_upload_spark' script was successfully executed. Runnig time was 36.66 secs
+2021-10-02 17:43:01,177:CRITICAL:intial_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7efd6d939908>). Progam aborted.
+2021-10-02 17:43:12,065:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-02 17:43:12,328:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 17:43:12,591:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 17:43:12,922:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 17:43:13,751:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-02 17:43:14,202:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-02 17:43:14,912:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-02 17:43:16,052:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 17:43:16,556:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-02 17:43:16,861:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 17:43:17,088:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 17:43:17,413:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-02 17:43:18,135:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-02 17:43:18,701:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-02 17:43:19,428:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-02 17:43:19,881:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-02 17:43:21,000:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 17:43:21,110:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-02 17:43:23,015:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-02 17:43:23,205:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-02 17:43:23,504:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-02 17:43:23,504:INFO:initial_data_cleaning: 'initial_data_cleaning_spark' script was successfully executed. Runnig time was 18.98 secs
+2021-10-02 17:43:41,804:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-02 17:43:47,688:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-02 17:43:53,137:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-02 17:43:58,663:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-02 17:43:58,663:INFO:initial_data_upload: 'initial_data_upload_spark' script was successfully executed. Runnig time was 31.3 secs
+2021-10-02 19:32:22,144:CRITICAL:daily_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7f081e729108>). Progam aborted.
+2021-10-02 19:34:56,126:CRITICAL:daily_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7f37543d1108>). Progam aborted.
+2021-10-02 19:48:13,079:CRITICAL:daily_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7fc4ca0d4108>). Progam aborted.
+2021-10-02 19:49:27,745:CRITICAL:intial_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7f68ed5c1988>). Progam aborted.
+2021-10-02 19:49:39,148:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-02 19:49:39,392:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 19:49:39,635:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 19:49:39,906:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 19:49:40,659:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-02 19:49:40,971:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-02 19:49:41,349:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-02 19:49:42,022:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 19:49:42,389:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-02 19:49:42,575:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 19:49:42,731:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 19:49:43,025:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-02 19:49:43,693:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-02 19:49:44,236:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-02 19:49:44,880:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-02 19:49:45,261:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-02 19:49:46,455:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 19:49:46,557:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-02 19:49:48,451:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-02 19:49:49,077:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-02 19:49:49,304:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-02 19:49:49,304:INFO:initial_data_cleaning: 'initial_data_cleaning' script was successfully executed. Runnig time was 18.68 secs
+2021-10-02 19:50:09,100:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-02 19:50:14,650:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-02 19:50:20,048:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-02 19:50:25,395:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-02 19:50:25,396:INFO:initial_data_upload: 'initial_data_upload' script was successfully executed. Runnig time was 32.0 secs
+2021-10-02 19:52:05,490:CRITICAL:daily_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7f25c7c42108>). Progam aborted.
+2021-10-02 19:58:52,021:CRITICAL:daily_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JJavaError'>, Py4JJavaError('An error occurred while calling o36.load.\n', JavaObject id=o37), <traceback object at 0x7ff9a4af8108>). Progam aborted.
+2021-10-02 20:04:05,503:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15865 rows loaded.
+2021-10-02 20:04:05,730:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105021 rows loaded.
+2021-10-02 20:04:05,936:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8700 rows loaded.
+2021-10-02 20:04:06,119:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9067 rows loaded.
+2021-10-02 20:04:06,523:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-02 20:04:06,724:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105021.
+2021-10-02 20:04:06,928:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8700.
+2021-10-02 20:04:07,152:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9067.
+2021-10-02 20:04:09,188:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-02 20:04:11,065:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-02 20:04:13,102:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-02 20:04:13,656:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-02 20:04:15,769:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-02 20:04:15,769:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 16.66 secs
+2021-10-02 20:04:26,147:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-02 20:04:26,439:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 20:04:26,707:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 20:04:26,925:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 20:04:27,513:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-02 20:04:27,830:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-02 20:04:28,278:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-02 20:04:28,981:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 20:04:29,253:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-02 20:04:29,475:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 20:04:29,705:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 20:04:30,044:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-02 20:04:30,533:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-02 20:04:30,946:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-02 20:04:31,782:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-02 20:04:32,465:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-02 20:04:34,037:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 20:04:34,193:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-02 20:04:35,943:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-02 20:04:36,181:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-02 20:04:36,397:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-02 20:04:36,397:INFO:initial_data_cleaning: 'initial_data_cleaning' script was successfully executed. Runnig time was 17.28 secs
+2021-10-02 20:04:56,564:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-02 20:05:02,566:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-02 20:05:08,283:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-02 20:05:13,858:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-02 20:05:13,859:INFO:initial_data_upload: 'initial_data_upload' script was successfully executed. Runnig time was 34.03 secs
+2021-10-02 20:06:01,822:INFO:daily_data_extraction: Table 'so' was successfully loaded. 15865 rows loaded.
+2021-10-02 20:06:02,087:INFO:daily_data_extraction: Table 'soitem' was successfully loaded. 105021 rows loaded.
+2021-10-02 20:06:02,475:INFO:daily_data_extraction: Table 'so' was successfully reduced to required fields: 9. Transactions from 2021-10-01 were filtered. Row count is 9.
+2021-10-02 20:06:02,718:INFO:daily_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105021.
+2021-10-02 20:06:04,038:INFO:daily_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-02 20:06:05,430:INFO:daily_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-02 20:06:05,430:INFO:daily_data_extraction: 'daily_data_extraction' script was successfully executed. Runnig time was 10.15 secs
+2021-10-02 20:06:17,810:INFO:daily_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 9 rows loaded
+2021-10-02 20:06:18,191:INFO:daily_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 20:06:18,467:INFO:daily_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 20:06:18,759:INFO:daily_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 20:06:19,530:INFO:daily_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 9
+2021-10-02 20:06:19,802:INFO:daily_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 9
+2021-10-02 20:06:20,157:INFO:daily_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 3
+2021-10-02 20:06:20,889:INFO:daily_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 20:06:21,173:INFO:daily_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 6
+2021-10-02 20:06:21,472:INFO:daily_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 20:06:21,654:INFO:daily_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 20:06:22,142:INFO:daily_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 6
+2021-10-02 20:06:22,684:INFO:daily_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 6
+2021-10-02 20:06:23,204:INFO:daily_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 6
+2021-10-02 20:06:23,827:INFO:daily_data_cleaning: Fact Sales table was created. Row count is 6
+2021-10-02 20:06:24,789:INFO:daily_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 20:06:24,789:INFO:daily_data_cleaning: 'daily_data_cleaning' script was successfully executed. Runnig time was 16.09 secs
+2021-10-02 20:06:43,117:INFO:daily_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 6 rows loaded
+2021-10-02 20:06:43,117:INFO:daily_data_upload: 'daily_data_upload' script was successfully executed. Runnig time was 15.07 secs
+2021-10-02 20:25:02,403:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15865 rows loaded.
+2021-10-02 20:25:02,738:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105021 rows loaded.
+2021-10-02 20:25:02,979:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8700 rows loaded.
+2021-10-02 20:25:03,132:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9067 rows loaded.
+2021-10-02 20:25:03,485:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-02 20:25:03,814:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105021.
+2021-10-02 20:25:03,997:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8700.
+2021-10-02 20:25:04,204:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9067.
+2021-10-02 20:25:06,229:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-02 20:25:07,912:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-02 20:25:08,947:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-02 20:25:09,315:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-02 20:25:10,179:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-02 20:25:10,179:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 17.1 secs
+2021-10-02 20:25:21,915:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-02 20:25:22,189:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 20:25:22,452:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 20:25:22,682:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 20:25:23,428:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-02 20:25:23,759:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-02 20:25:24,209:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-02 20:25:25,272:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 20:25:25,884:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-02 20:25:26,130:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 20:25:26,329:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 20:25:26,580:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-02 20:25:27,320:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-02 20:25:28,162:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-02 20:25:28,991:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-02 20:25:29,815:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-02 20:25:31,196:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 20:25:31,376:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-02 20:25:33,459:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-02 20:25:33,863:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-02 20:25:34,352:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-02 20:25:34,352:INFO:initial_data_cleaning: 'initial_data_cleaning' script was successfully executed. Runnig time was 20.46 secs
+2021-10-02 20:25:52,902:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-02 20:25:58,767:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-02 20:26:04,303:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-02 20:26:09,888:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-02 20:26:09,888:INFO:initial_data_upload: 'initial_data_upload' script was successfully executed. Runnig time was 32.14 secs
+2021-10-02 20:27:04,637:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15865 rows loaded.
+2021-10-02 20:27:04,918:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105021 rows loaded.
+2021-10-02 20:27:05,111:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8700 rows loaded.
+2021-10-02 20:27:05,269:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9067 rows loaded.
+2021-10-02 20:27:05,664:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-02 20:27:05,806:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105021.
+2021-10-02 20:27:05,928:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8700.
+2021-10-02 20:27:06,125:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9067.
+2021-10-02 20:27:08,448:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-02 20:27:09,750:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-02 20:27:11,607:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-02 20:27:12,271:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-02 20:27:13,030:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-02 20:27:13,030:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 15.51 secs
+2021-10-02 20:27:23,130:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-02 20:27:23,569:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 20:27:23,809:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 20:27:24,015:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 20:27:24,558:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-02 20:27:24,855:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-02 20:27:25,307:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-02 20:27:25,951:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 20:27:26,364:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-02 20:27:26,686:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 20:27:26,937:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 20:27:27,236:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-02 20:27:28,357:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-02 20:27:29,182:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-02 20:27:30,234:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-02 20:27:30,857:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-02 20:27:32,650:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 20:27:32,768:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-02 20:27:34,462:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-02 20:27:34,621:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-02 20:27:34,883:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-02 20:27:34,883:INFO:initial_data_cleaning: 'initial_data_cleaning' script was successfully executed. Runnig time was 18.84 secs
+2021-10-02 20:27:53,002:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-02 20:27:58,676:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-02 20:28:04,224:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-02 20:28:09,918:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-02 20:28:09,918:INFO:initial_data_upload: 'initial_data_upload' script was successfully executed. Runnig time was 32.07 secs
+2021-10-02 20:29:08,558:INFO:daily_data_extraction: Table 'so' was successfully loaded. 15865 rows loaded.
+2021-10-02 20:29:08,893:INFO:daily_data_extraction: Table 'soitem' was successfully loaded. 105021 rows loaded.
+2021-10-02 20:29:09,349:INFO:daily_data_extraction: Table 'so' was successfully reduced to required fields: 9. Transactions from 2021-10-01 were filtered. Row count is 9.
+2021-10-02 20:29:09,576:INFO:daily_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105021.
+2021-10-02 20:29:10,958:INFO:daily_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-02 20:29:12,041:INFO:daily_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-02 20:29:12,041:INFO:daily_data_extraction: 'daily_data_extraction' script was successfully executed. Runnig time was 10.64 secs
+2021-10-02 20:29:21,163:INFO:daily_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 9 rows loaded
+2021-10-02 20:29:21,465:INFO:daily_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105021 rows loaded
+2021-10-02 20:29:21,736:INFO:daily_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-02 20:29:21,977:INFO:daily_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-02 20:29:22,735:INFO:daily_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 9
+2021-10-02 20:29:23,380:INFO:daily_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 9
+2021-10-02 20:29:24,264:INFO:daily_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 3
+2021-10-02 20:29:25,025:INFO:daily_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-02 20:29:25,285:INFO:daily_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 6
+2021-10-02 20:29:25,479:INFO:daily_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89089
+2021-10-02 20:29:25,681:INFO:daily_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89089
+2021-10-02 20:29:26,229:INFO:daily_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 6
+2021-10-02 20:29:26,774:INFO:daily_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 6
+2021-10-02 20:29:27,487:INFO:daily_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 6
+2021-10-02 20:29:27,942:INFO:daily_data_cleaning: Fact Sales table was created. Row count is 6
+2021-10-02 20:29:28,848:INFO:daily_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-02 20:29:28,848:INFO:daily_data_cleaning: 'daily_data_cleaning' script was successfully executed. Runnig time was 14.1 secs
+2021-10-02 20:29:47,495:INFO:daily_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 6 rows loaded
+2021-10-02 20:29:47,495:INFO:daily_data_upload: 'daily_data_upload' script was successfully executed. Runnig time was 14.74 secs
+2021-10-03 04:20:46,632:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15866 rows loaded.
+2021-10-03 04:20:46,995:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105022 rows loaded.
+2021-10-03 04:20:47,187:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8700 rows loaded.
+2021-10-03 04:20:47,358:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9067 rows loaded.
+2021-10-03 04:20:47,989:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-03 04:20:48,218:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105022.
+2021-10-03 04:20:48,381:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8700.
+2021-10-03 04:20:48,724:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9067.
+2021-10-03 04:20:51,882:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-03 04:20:53,531:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-03 04:20:54,672:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-03 04:20:55,322:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-03 04:20:56,552:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-03 04:20:56,553:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 18.45 secs
+2021-10-03 04:21:07,464:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-03 04:21:07,964:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105022 rows loaded
+2021-10-03 04:21:08,263:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-03 04:21:08,501:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-03 04:21:09,078:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-03 04:21:09,469:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-03 04:21:09,865:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-03 04:21:10,571:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-03 04:21:10,846:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-03 04:21:11,118:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89090
+2021-10-03 04:21:11,338:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89090
+2021-10-03 04:21:11,594:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-03 04:21:12,121:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-03 04:21:12,940:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-03 04:21:13,829:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-03 04:21:14,566:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-03 04:21:16,280:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-03 04:21:16,501:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-03 04:21:19,600:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-03 04:21:19,787:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-03 04:21:20,044:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-03 04:21:20,044:INFO:initial_data_cleaning: 'initial_data_cleaning' script was successfully executed. Runnig time was 19.6 secs
+2021-10-03 04:21:38,025:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-03 04:21:43,826:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-03 04:21:49,391:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-03 04:21:54,969:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-03 04:21:54,969:INFO:initial_data_upload: 'initial_data_upload' script was successfully executed. Runnig time was 31.71 secs
+2021-10-03 07:58:28,073:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15866 rows loaded.
+2021-10-03 07:58:28,419:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105022 rows loaded.
+2021-10-03 07:58:28,608:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8700 rows loaded.
+2021-10-03 07:58:28,782:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9067 rows loaded.
+2021-10-03 07:58:29,216:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-03 07:58:29,474:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105022.
+2021-10-03 07:58:29,625:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8700.
+2021-10-03 07:58:29,737:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9067.
+2021-10-03 07:58:32,264:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-03 07:58:33,998:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-03 07:58:35,206:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-03 07:58:35,603:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-03 07:58:36,819:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-03 07:58:36,819:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 17.68 secs
+2021-10-03 07:58:49,474:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-03 07:58:49,959:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105022 rows loaded
+2021-10-03 07:58:50,440:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-03 07:58:50,828:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-03 07:58:52,281:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-03 07:58:52,747:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-03 07:58:53,229:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-03 07:58:54,262:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-03 07:58:54,835:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-03 07:58:55,169:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89090
+2021-10-03 07:58:55,439:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89090
+2021-10-03 07:58:55,902:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-03 07:58:56,944:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-03 07:58:57,550:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-03 07:58:58,133:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-03 07:58:58,757:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-03 07:58:59,930:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-03 07:59:00,055:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-03 07:59:02,177:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-03 07:59:02,510:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-03 07:59:02,802:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-03 07:59:02,802:INFO:initial_data_cleaning: 'initial_data_cleaning' script was successfully executed. Runnig time was 21.96 secs
+2021-10-03 07:59:29,512:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-03 07:59:35,710:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-03 07:59:41,365:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-03 07:59:47,006:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-03 07:59:47,007:INFO:initial_data_upload: 'initial_data_upload' script was successfully executed. Runnig time was 40.01 secs
+2021-10-03 08:54:06,286:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15866 rows loaded.
+2021-10-03 08:54:06,649:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105022 rows loaded.
+2021-10-03 08:54:06,817:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8700 rows loaded.
+2021-10-03 08:54:07,003:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9067 rows loaded.
+2021-10-03 08:54:07,453:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-03 08:54:07,607:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105022.
+2021-10-03 08:54:07,846:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8700.
+2021-10-03 08:54:08,067:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9067.
+2021-10-03 08:54:10,358:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-03 08:54:11,955:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-03 08:54:13,373:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-03 08:54:13,828:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-03 08:54:14,744:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-03 08:54:14,747:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 16.89 secs
+2021-10-03 08:54:29,436:INFO:initial_data_cleaning: Parquet file 'r_so' was successfully loaded into DataFrame. 3409 rows loaded
+2021-10-03 08:54:29,748:INFO:initial_data_cleaning: Parquet file 'r_soitem' was successfully loaded into DataFrame. 105022 rows loaded
+2021-10-03 08:54:29,994:INFO:initial_data_cleaning: Parquet file 'r_product' was successfully loaded into DataFrame. 8700 rows loaded
+2021-10-03 08:54:30,320:INFO:initial_data_cleaning: Parquet file 'm_part' was successfully loaded into DataFrame. 9067 rows loaded
+2021-10-03 08:54:31,056:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Transactions with status [80, 85, 90, 95] were filtered out. Row count is 3375
+2021-10-03 08:54:31,425:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions were categorized. Row count is 3375
+2021-10-03 08:54:31,825:INFO:initial_data_cleaning: Transactions not required in Fact_Sales table were loaded into DataFrame 'not_required'. Row count is 106
+2021-10-03 08:54:32,653:INFO:initial_data_cleaning: DataFrame 'not_required' was saved as CSV file
+2021-10-03 08:54:32,929:INFO:initial_data_cleaning: Transformation on DataFrame 'so' completed: Sales transactions with categories: ['Samples', 'RMA', 'Closed Channel', 'Uncategorized'] were filtered out. Row count is 3269
+2021-10-03 08:54:33,230:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Items with typeId 10 were filtered. Row count is 89090
+2021-10-03 08:54:33,403:INFO:initial_data_cleaning: Transformation on DataFrame 'soitem' completed: Column qtyOrdered was rounded to zero digits. Row count is 89090
+2021-10-03 08:54:33,595:INFO:initial_data_cleaning: Transformation on DataFrame 'part' completed: part volume calculated. Row count is 9067
+2021-10-03 08:54:34,462:INFO:initial_data_cleaning: Join completed. DataFrame 'soitem' joined with DataFrame 'so'. Row count is 17457
+2021-10-03 08:54:34,885:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'product'. Row count is 17457
+2021-10-03 08:54:35,752:INFO:initial_data_cleaning: Join completed. DataFrame 'categorized_items' joined with DataFrame 'part'. Row count is 17457
+2021-10-03 08:54:36,445:INFO:initial_data_cleaning: Fact Sales table was created. Row count is 17457
+2021-10-03 08:54:38,461:INFO:initial_data_cleaning: Table 'Fact_Sales' was successfully saved as Parquet file
+2021-10-03 08:54:38,603:INFO:initial_data_cleaning: 'Dim Products' table was created. Row count is 9067
+2021-10-03 08:54:40,727:INFO:initial_data_cleaning: Table 'Dim_Products' was successfully saved as Parquet file
+2021-10-03 08:54:41,083:INFO:initial_data_cleaning: Table 'Dim_Sales_Channels' was successfully saved as Parquet file
+2021-10-03 08:54:41,323:INFO:initial_data_cleaning: Table 'Dim_Dates' was successfully saved as Parquet file
+2021-10-03 08:54:41,323:INFO:initial_data_cleaning: 'initial_data_cleaning' script was successfully executed. Runnig time was 21.8 secs
+2021-10-03 08:55:05,479:INFO:initial_data_upload: Parquet file 'Fact_Sales' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 17457 rows loaded
+2021-10-03 08:55:11,513:INFO:initial_data_upload: Parquet file 'Dim_Products' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 9067 rows loaded
+2021-10-03 08:55:17,004:INFO:initial_data_upload: Parquet file 'Dim_Sales_Channels' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 16 rows loaded
+2021-10-03 08:55:22,569:INFO:initial_data_upload: Parquet file 'Dim_Dates' was successfully loaded into DataFrame and uploaded as Parquet file into S3 bucket. 365 rows loaded
+2021-10-03 08:55:22,570:INFO:initial_data_upload: 'initial_data_upload' script was successfully executed. Runnig time was 36.86 secs
+2021-10-06 03:13:30,754:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15889 rows loaded.
+2021-10-06 03:13:31,165:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105157 rows loaded.
+2021-10-06 03:13:31,362:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-06 03:13:31,558:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-06 03:13:32,010:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-06 03:13:32,223:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105157.
+2021-10-06 03:13:32,355:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-06 03:13:32,577:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-06 03:13:34,947:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-06 03:13:36,931:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-06 03:13:38,253:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-06 03:13:38,580:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-06 03:13:39,497:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-06 03:13:39,497:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 18.08 secs
+2021-10-06 03:20:19,549:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15889 rows loaded.
+2021-10-06 03:20:19,841:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105157 rows loaded.
+2021-10-06 03:20:20,104:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-06 03:20:20,301:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-06 03:20:20,785:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-06 03:20:21,098:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105157.
+2021-10-06 03:20:21,251:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-06 03:20:21,380:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-06 03:20:23,456:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-06 03:20:25,732:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-06 03:20:27,310:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-06 03:20:27,914:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-06 03:21:14,462:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-06 03:21:14,464:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 62.63 secs
+2021-10-06 03:27:54,810:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15889 rows loaded.
+2021-10-06 03:27:55,151:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105157 rows loaded.
+2021-10-06 03:27:55,461:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-06 03:27:55,637:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-06 03:27:56,025:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-06 03:27:56,295:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105157.
+2021-10-06 03:27:56,471:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-06 03:27:56,612:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-06 03:27:59,109:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-06 03:28:00,738:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-06 03:28:02,267:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-06 03:28:02,704:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-06 03:28:03,571:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-06 03:28:10,909:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-06 03:28:18,091:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet file on S3 bucket
+2021-10-06 03:31:48,840:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15889 rows loaded.
+2021-10-06 03:31:49,143:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105157 rows loaded.
+2021-10-06 03:31:49,361:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-06 03:31:49,639:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-06 03:31:50,513:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-06 03:31:50,893:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105157.
+2021-10-06 03:31:51,247:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-06 03:31:51,456:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-06 03:31:54,083:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-06 03:31:56,682:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-06 03:31:58,478:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-06 03:31:58,847:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-06 03:31:59,879:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-06 03:32:07,867:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-06 03:32:14,597:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet file on S3 bucket
+2021-10-06 03:32:20,407:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet file on S3 bucket
+2021-10-06 03:32:27,867:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet file on S3 bucket
+2021-10-06 03:32:27,869:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 46.46 secs
+2021-10-06 03:33:08,508:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15889 rows loaded.
+2021-10-06 03:33:08,828:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105157 rows loaded.
+2021-10-06 03:33:09,018:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-06 03:33:09,172:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-06 03:33:09,563:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-06 03:33:09,725:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105157.
+2021-10-06 03:33:09,964:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-06 03:33:10,319:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-06 03:33:12,624:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-06 03:33:14,368:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-06 03:33:15,761:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-06 03:33:16,356:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-06 03:33:17,927:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-06 03:33:26,208:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-06 03:33:33,009:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet file on S3 bucket
+2021-10-06 03:34:50,891:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet file on S3 bucket
+2021-10-06 03:34:56,732:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet file on S3 bucket
+2021-10-06 03:34:56,735:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 115.7 secs
+2021-10-06 05:09:32,661:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15889 rows loaded.
+2021-10-06 05:09:32,982:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105157 rows loaded.
+2021-10-06 05:09:33,220:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-06 05:09:33,419:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-06 05:09:33,807:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-06 05:09:34,016:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105157.
+2021-10-06 05:09:34,193:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-06 05:09:34,370:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-06 05:09:37,921:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-06 05:09:39,541:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-06 05:09:41,005:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-06 05:09:41,441:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-06 05:09:42,414:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-06 05:09:50,193:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-06 05:13:24,293:INFO:intial_data_extraction: Table 'so' was successfully loaded. 15889 rows loaded.
+2021-10-06 05:13:24,564:INFO:intial_data_extraction: Table 'soitem' was successfully loaded. 105157 rows loaded.
+2021-10-06 05:13:24,766:INFO:intial_data_extraction: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-06 05:13:24,938:INFO:intial_data_extraction: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-06 05:13:25,329:INFO:intial_data_extraction: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-06 05:13:25,514:INFO:intial_data_extraction: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105157.
+2021-10-06 05:13:25,831:INFO:intial_data_extraction: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-06 05:13:26,289:INFO:intial_data_extraction: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-06 05:13:29,359:INFO:intial_data_extraction: DataFrame 'reduced_part' was successfully masked.
+2021-10-06 05:13:30,959:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-06 05:13:32,242:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-06 05:13:32,701:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-06 05:13:33,557:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-06 05:13:41,095:INFO:intial_data_extraction: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-06 05:13:47,833:INFO:intial_data_extraction: DataFrame 'reduced_soitem' was successfully saved as Parquet file on S3 bucket
+2021-10-06 05:13:53,314:INFO:intial_data_extraction: DataFrame 'reduced_product' was successfully saved as Parquet file on S3 bucket
+2021-10-06 05:13:58,848:INFO:intial_data_extraction: DataFrame 'masked_part' was successfully saved as Parquet file on S3 bucket
+2021-10-06 05:13:58,848:INFO:intial_data_extraction: 'initial_data_extraction' script was successfully executed. Running time was 41.85 secs
+2021-10-07 03:32:59,063:INFO:initial_data_extraction_aws: Table 'so' was successfully loaded. 15906 rows loaded.
+2021-10-07 03:32:59,335:INFO:initial_data_extraction_aws: Table 'soitem' was successfully loaded. 105267 rows loaded.
+2021-10-07 03:32:59,506:INFO:initial_data_extraction_aws: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-07 03:32:59,685:INFO:initial_data_extraction_aws: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-07 03:33:00,246:INFO:initial_data_extraction_aws: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-07 03:33:00,532:INFO:initial_data_extraction_aws: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105267.
+2021-10-07 03:33:00,834:INFO:initial_data_extraction_aws: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-07 03:33:01,080:INFO:initial_data_extraction_aws: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-07 03:33:04,975:INFO:initial_data_extraction_aws: DataFrame 'reduced_part' was successfully masked.
+2021-10-07 03:33:06,474:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-07 03:33:08,114:INFO:initial_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-07 03:33:08,732:INFO:initial_data_extraction_aws: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-07 03:33:09,760:INFO:initial_data_extraction_aws: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-07 03:37:22,834:INFO:initial_data_extraction_aws: Table 'so' was successfully loaded. 15906 rows loaded.
+2021-10-07 03:37:23,189:INFO:initial_data_extraction_aws: Table 'soitem' was successfully loaded. 105267 rows loaded.
+2021-10-07 03:37:23,385:INFO:initial_data_extraction_aws: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-07 03:37:23,559:INFO:initial_data_extraction_aws: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-07 03:37:24,058:INFO:initial_data_extraction_aws: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-07 03:37:24,226:INFO:initial_data_extraction_aws: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105267.
+2021-10-07 03:37:24,466:INFO:initial_data_extraction_aws: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-07 03:37:24,698:INFO:initial_data_extraction_aws: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-07 03:37:28,023:INFO:initial_data_extraction_aws: DataFrame 'reduced_part' was successfully masked.
+2021-10-07 03:37:29,849:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-07 03:37:31,423:INFO:initial_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-07 03:37:31,890:INFO:initial_data_extraction_aws: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-07 03:37:32,970:INFO:initial_data_extraction_aws: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-07 03:37:40,457:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-07 03:41:21,769:INFO:initial_data_extraction_aws: Table 'so' was successfully loaded. 15906 rows loaded.
+2021-10-07 03:41:22,258:INFO:initial_data_extraction_aws: Table 'soitem' was successfully loaded. 105267 rows loaded.
+2021-10-07 03:41:22,544:INFO:initial_data_extraction_aws: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-07 03:41:22,850:INFO:initial_data_extraction_aws: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-07 03:41:23,788:INFO:initial_data_extraction_aws: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-07 03:41:24,152:INFO:initial_data_extraction_aws: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105267.
+2021-10-07 03:41:24,470:INFO:initial_data_extraction_aws: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-07 03:41:24,788:INFO:initial_data_extraction_aws: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-07 03:41:28,301:INFO:initial_data_extraction_aws: DataFrame 'reduced_part' was successfully masked.
+2021-10-07 03:41:30,206:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-07 03:41:31,575:INFO:initial_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-07 03:41:32,034:INFO:initial_data_extraction_aws: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-07 03:41:32,945:INFO:initial_data_extraction_aws: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-07 03:44:33,187:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-07 03:45:30,490:INFO:initial_data_extraction_aws: Table 'so' was successfully loaded. 15906 rows loaded.
+2021-10-07 03:45:30,785:INFO:initial_data_extraction_aws: Table 'soitem' was successfully loaded. 105267 rows loaded.
+2021-10-07 03:45:30,957:INFO:initial_data_extraction_aws: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-07 03:45:31,139:INFO:initial_data_extraction_aws: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-07 03:45:31,601:INFO:initial_data_extraction_aws: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-07 03:45:31,785:INFO:initial_data_extraction_aws: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105267.
+2021-10-07 03:45:32,038:INFO:initial_data_extraction_aws: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-07 03:45:32,276:INFO:initial_data_extraction_aws: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-07 03:45:35,079:INFO:initial_data_extraction_aws: DataFrame 'reduced_part' was successfully masked.
+2021-10-07 03:45:36,683:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-07 03:45:37,980:INFO:initial_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-07 03:45:38,645:INFO:initial_data_extraction_aws: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-07 03:46:05,935:INFO:initial_data_extraction_aws: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-07 03:46:14,779:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-07 03:47:07,409:INFO:initial_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet file on S3 bucket
+2021-10-07 03:49:42,324:INFO:initial_data_extraction_aws: Table 'so' was successfully loaded. 15906 rows loaded.
+2021-10-07 03:49:42,645:INFO:initial_data_extraction_aws: Table 'soitem' was successfully loaded. 105267 rows loaded.
+2021-10-07 03:49:42,842:INFO:initial_data_extraction_aws: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-07 03:49:43,029:INFO:initial_data_extraction_aws: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-07 03:49:43,490:INFO:initial_data_extraction_aws: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-07 03:49:43,806:INFO:initial_data_extraction_aws: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105267.
+2021-10-07 03:49:43,974:INFO:initial_data_extraction_aws: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-07 03:49:44,120:INFO:initial_data_extraction_aws: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-07 03:49:46,368:INFO:initial_data_extraction_aws: DataFrame 'reduced_part' was successfully masked.
+2021-10-07 03:49:48,195:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-07 03:49:49,593:INFO:initial_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-07 03:49:50,293:INFO:initial_data_extraction_aws: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-07 03:49:51,665:INFO:initial_data_extraction_aws: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-07 03:49:59,492:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-07 03:50:06,271:INFO:initial_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet file on S3 bucket
+2021-10-07 03:50:11,809:INFO:initial_data_extraction_aws: DataFrame 'reduced_product' was successfully saved as Parquet file on S3 bucket
+2021-10-07 03:50:17,862:INFO:initial_data_extraction_aws: DataFrame 'masked_part' was successfully saved as Parquet file on S3 bucket
+2021-10-07 03:50:17,862:INFO:initial_data_extraction_aws: 'initial_data_extraction_aws' script was successfully executed. Running time was 43.24 secs
+2021-10-07 04:10:56,119:INFO:initial_data_extraction_aws: Table 'so' was successfully loaded. 15906 rows loaded.
+2021-10-07 04:10:56,370:INFO:initial_data_extraction_aws: Table 'soitem' was successfully loaded. 105267 rows loaded.
+2021-10-07 04:10:56,533:INFO:initial_data_extraction_aws: Table 'product' was successfully loaded. 8701 rows loaded.
+2021-10-07 04:10:56,699:INFO:initial_data_extraction_aws: Table 'part' was successfully loaded. 9068 rows loaded.
+2021-10-07 04:10:57,072:INFO:initial_data_extraction_aws: Table 'so' was successfully reduced to required fields: 9. Date range applied is: 2021-01-01 00:00:00 - 2021-09-11 23:59:59. Row count is 3409.
+2021-10-07 04:10:57,287:INFO:initial_data_extraction_aws: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105267.
+2021-10-07 04:10:57,493:INFO:initial_data_extraction_aws: Table 'product' was successfully reduced to required fields: 2. Row count is 8701.
+2021-10-07 04:10:57,727:INFO:initial_data_extraction_aws: Table 'part' was successfully reduced to required fields: 7. Row count is 9068.
+2021-10-07 04:10:59,861:INFO:initial_data_extraction_aws: DataFrame 'reduced_part' was successfully masked.
+2021-10-07 04:11:01,859:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-07 04:11:03,474:INFO:initial_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-07 04:11:03,950:INFO:initial_data_extraction_aws: DataFrame 'reduced_product' was successfully saved as Parquet and CSV file
+2021-10-07 04:11:05,171:INFO:initial_data_extraction_aws: DataFrame 'masked_part' was successfully saved as Parquet and CSV file
+2021-10-07 04:11:15,498:INFO:initial_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-07 04:11:22,016:INFO:initial_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet file on S3 bucket
+2021-10-07 04:11:27,694:INFO:initial_data_extraction_aws: DataFrame 'reduced_product' was successfully saved as Parquet file on S3 bucket
+2021-10-07 04:11:33,640:INFO:initial_data_extraction_aws: DataFrame 'masked_part' was successfully saved as Parquet file on S3 bucket
+2021-10-07 04:11:33,640:INFO:initial_data_extraction_aws: 'initial_data_extraction_aws' script was successfully executed. Running time was 45.32 secs
+2021-10-07 04:57:59,198:CRITICAL:daily_data_extraction: Unexpected error during 'so' table reading from database. Unexpected error: (<class 'py4j.protocol.Py4JError'>, Py4JError('An error occurred while calling o36.load',), <traceback object at 0x7f0e058d47c8>). Progam aborted.
+2021-10-07 05:02:42,722:INFO:daily_data_extraction_aws: Table 'so' was successfully loaded. 15907 rows loaded.
+2021-10-07 05:02:43,011:INFO:daily_data_extraction_aws: Table 'soitem' was successfully loaded. 105269 rows loaded.
+2021-10-07 05:02:43,564:INFO:daily_data_extraction_aws: Table 'so' was successfully reduced to required fields: 9. Transactions from 2021-10-06 were filtered. Row count is 18.
+2021-10-07 05:02:43,772:INFO:daily_data_extraction_aws: Table 'soitem' was successfully reduced to required fields: 5. Row count is 105269.
+2021-10-07 05:02:45,500:INFO:daily_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet and CSV file
+2021-10-07 05:02:46,846:INFO:daily_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet and CSV file
+2021-10-07 05:02:53,700:INFO:daily_data_extraction_aws: DataFrame 'reduced_so' was successfully saved as Parquet file on S3 bucket
+2021-10-07 05:03:00,157:INFO:daily_data_extraction_aws: DataFrame 'reduced_soitem' was successfully saved as Parquet file on S3 bucket
+2021-10-07 05:03:00,157:INFO:daily_data_extraction_aws: 'daily_data_extraction_aws' script was successfully executed. Runnig time was 28.71 secs
