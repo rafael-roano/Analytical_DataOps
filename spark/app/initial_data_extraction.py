@@ -191,7 +191,7 @@ part = table_to_dataframe("part")
 # Reduce 'so' table to required fields and extract transactions from specific time period (initial extraction).
 so_req_fields = ["id", "num", "currencyId", "customerId", "dateCompleted", "dateCreated", "locationGroupId", "qbClassId", "statusId"]
 start_date = "2021-01-01 00:00:00"
-finish_date = "2021-10-11 23:59:59"
+finish_date = "2021-10-15 23:59:59"
 reduced_so = reduce_so_table(so, so_req_fields, 9, start_date, finish_date)
 
 

@@ -13,15 +13,16 @@ The project includes two versions:
 
 * [Architecture Diagrams](#Architecture-Diagrams-and-Technologies)
 * [Entity Relationship Diagrams](#Entity-Relationship-Diagrams)
+* [Setup](#Setup)
 * [DAGS](#DAGS)
 * [Pipeline Steps](#Pipeline-Steps)
 
 <!-- ARCHITECTURE DIAGRAMS -->
 ## Architecture Diagrams and Technologies
 
-![Local Architecture](.spark/resources/images/architecture_diagram_local.png)
+![Local Architecture](./spark/resources/images/architecture_diagram_local.png)
 
-![Distributed Architecture](.spark/resources/images/architecture_diagram_distributed.png)
+![Distributed Architecture](./spark/resources/images/architecture_diagram_distributed.png)
 
 * Apache Airflow: Open-source workflow management platform, used to orchestrate and schedule pipeline tasks. Airflow was selected for this project for having plenty of operators and plugins right out of the box and for its robust workflow monitoring capability. It has a large community as well.
 
@@ -42,32 +43,134 @@ The project includes two versions:
 
 ### Source Schema (OLTP)
 
-![Source Schema](.spark/resources/images/transactional_tables_schema.png)
+![Source Schema](./spark/resources/images/transactional_tables_schema.png)
 
 ### Star Schema (OLAP)
 
-![Source Schema](.spark/resources/images/star_schema.png)
+![Source Schema](./spark/resources/images/star_schema.png)
+
+<!-- Setup -->
+## Setup
+
+### Clone project
+
+```bash
+git clone https://github.com/rafael-roano/Open-ended_Capstone.git
+```
+
+### Build Docker Image
+
+Navigate to Open-ended_Capstone/docker/docker-airflow and build Docker image to set up an Airflow/Spark environment:
+
+```bash
+docker build --rm --force-rm -t docker-af-sp-hd:2.1.0_3.1.2_2.7 . --build-arg AIRFLOW_VERSION=2.1.0 --build-arg SPARK_VERSION=3.1.2 --build-arg HADOOP_VERSION=2.7
+```
+
+This image includes:
+
+* Airflow 2.1.0
+* Spark 3.1.2
+* Hadoop 2.7
+
+The following dependencies are included via the *requirements.txt*:
+
+* apache-airflow-providers-apache-spark 2.0.1
+* apache-airflow-providers-snowflake 2.1.1
+* apache-airflow-providers-amazon 2.2.0
+
+### Start Containers
+
+Navigate to Open-ended_Capstone/docker to create and start containers:
+
+```bash
+docker-compose -f docker-compose-2.1.0_3.1.2_2.7.yml up 
+```
+
+The previous command will create the following containers:
+
+| Container Name    | Image                           |
+| ----------------- | ------------------------------- |
+| postgres          | postgres:9.6                    |
+| airflow-webserver | docker-af-sp-hd:2.1.0_3.1.2_2.7 |
+| spark-master      | bitnami/spark:3.1.2             |
+| spark-worker-1    | bitnami/spark:3.1.2             |
+
+### Airflow Connections
+
+The following connections setup is required:
+
+#### Spark
+
+| Field                 | Value                           |
+| --------------------- | ------------------------------- |
+| Conn Id               | spark_default                   |
+| Conn Type             | Spark                           |
+| Host                  | spark://spark                   |
+| Port                  | 7077                            |
+
+#### Snowflake
+
+| Field                 | Value                                        |
+| --------------------- | -------------------------------------------- |
+| Conn Id               | snowflake                                    |
+| Conn Type             | Snowflake                                    |
+| Host                  | https://<snowflake account>.snowflakecomputing.com/    |
+| Schema                | STAR_SCHEMA                                  |
+| Login                 | snowflake username                           |
+| Password              | snowflake password                           |
+| Extra                 | {"extra__snowflake__account": "<snowflake account>", "extra__snowflake__aws_access_key_id": "", "extra__snowflake__aws_secret_access_key": "", "extra__snowflake__database": "SALES", "extra__snowflake__region": "", "extra__snowflake__role": "", "extra__snowflake__warehouse": "COMPUTE_WH"}                           |
+| Account               | snowflake account                            |
+| Database              | SALES                                        |
+| Region                | us-west-2                                    |
+| Warehouse             | COMPUTE_WH                                   |
+
+#### S3
+
+| Field                 | Value                           |
+| --------------------- | ------------------------------- |
+| Conn Id               | s3                              |
+| Conn Type             | S3                              |
+| Extra                 | {"aws_access_key_id":"", "aws_secret_access_key": "", "region_name": ""} |
 
 <!-- DAGS -->
+
 ## DAGS
 
 Airflow DAGS included are:
 
 * initial_etl_dag.py: Runs the ETL steps required to populate our model at the time of setup.
 
-![Initial ETL DAG](.spark/resources/images/initial_etl_dag.png)
+![Initial ETL DAG](./spark/resources/images/initial_etl_dag.png)
 
 * pipeline_dag.py: Runs the ETL steps required to add the incremental data to our model on a daily basis.
 
-![Pipeline DAG](.spark/resources/images/pipeline_dag.png)
+![Pipeline DAG](./spark/resources/images/pipeline_dag.png)
 
 * initial_etl_dag_aws.py: Runs the ETL steps required to populate our model at the time of setup for the cluster mode.
 
-![Initial ETL DAG AWS](.spark/resources/images/initial_etl_dag_aws.png)
+![Initial ETL DAG AWS](./spark/resources/images/initial_etl_dag_aws.png)
 
 * pipeline_dag_aws.py: Runs the ETL steps required to add the incremental data to our model on a daily basis for the cluster mode.
 
-![Pipeline DAG AWS](.spark/resources/images/pipeline_dag_aws.png)
+![Pipeline DAG AWS](./spark/resources/images/pipeline_dag_aws.png)
+
+### Set up and activate DAGS
+
+Steps to start the pipeline are:
+
+#### Initial ETL Run
+
+1. Adjust *start_date* and *finish_date* in module **initial_data_extraction.py** (or **initial_data_extraction_aws.py** if using cluster mode) with any required date range to load the model before activating the daily ETL.
+
+2. Activate *initial_etl_dag* on Airflow UI (or *initial_etl_dag_aws* if using cluster mode).
+
+3. Triger *initial_etl_dag* manually.
+
+#### Daily ETL Runs
+
+1. Once an initial load was performed successfully, adjust *start_date* in modules **pipeline_dag.py** (or **pipeline_dag_aws.py**) with the previous day's date.
+
+2. Activate *pipeline_dag* on Airflow UI (or *pipeline_dag_aws* if using cluster mode)
 
 <!-- PIPELINE STEPS -->
 ## Pipeline Steps
@@ -162,8 +265,6 @@ In order to use the Distributed Processing version, the following modules and Ai
 
   * cluster_steps_addition operator: EMR Add Steps Operator to the add spark-submit command as a step to the cluster, which submits the initial_data_cleaning_aws.py and daily_data_cleaning_aws.py modules to the cluster.
   * step_check sensor: EMR Step Sensor to wait to the step to complete before proceeding with the next DAG tasks.
-
-All **final modules** can be found in ./spark/app.
 
 ## Authors
 

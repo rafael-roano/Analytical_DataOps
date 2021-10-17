@@ -27,8 +27,8 @@ default_args = {
 now = datetime.now()
 
 with DAG("pipeline_dag",
-        start_date=datetime(2021, 10, 13),
-        schedule_interval = "0 8 * * *",   # Run daily at 08:00 AM (UTC); equivlent to 01:00 AM (PDT)
+        start_date=datetime(2021, 10, 16),
+        schedule_interval = "0 8 * * *",   # Run daily at 08:00 AM (UTC); equivalent to 01:00 AM (PDT)
         default_args=default_args,
         description = "Daily ETL of sales transactions", 
         catchup=True
